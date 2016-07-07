@@ -18,8 +18,16 @@
 
     <description>Dataformat extension for Jackson to handle the HAL JSON format.</description>
 
+    <scm>
+        <developerConnection>scm:git:https://github.com/Nykredit/jackson-dataformat-hal.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <com.fasterxml.jackson.version>2.8.0</com.fasterxml.jackson.version>
+        <junit.version>4.12</junit.version>
+        <org.slf4j.version>1.7.21</org.slf4j.version>
     </properties>
 
     <dependencies>
@@ -31,19 +39,29 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.21</version>
+            <version>${org.slf4j.version}</version>
         </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-        <!--dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <scope>test</scope>
-        </dependency-->
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
