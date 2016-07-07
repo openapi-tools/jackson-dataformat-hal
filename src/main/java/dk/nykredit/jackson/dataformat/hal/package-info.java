@@ -1,0 +1,15 @@
+/**
+ * Package containing classes to help generating HAL compliant JSON output using the Jackson framework. The module is activated
+ * by adding a Jackson module to the Jackson {@link com.fasterxml.jackson.databind.ObjectMapper}:
+ * <pre>
+ * ObjectMapper om = new ObjectMapper();
+ * om.registerModule(new JacksonHALModule());
+ * </pre>
+ *
+ * To signal some bean is to be treated as HAL resource it should be annotated with the {@link dk.nykredit.nif.ws.rs.hal.Resource}
+ * annotation. To mark a property of a HAL resource for inclusion as embedded resource the property should be annotations with
+ * {@link dk.nykredit.nif.ws.rs.hal.EmbeddedResource} - this is true for both collections of resources and for one-to-one
+ * relationships. Adding a link is done by creating a property of type {@link dk.nykredit.nif.ws.rs.hal.HALLink} annotated with
+ * {@link dk.nykredit.nif.ws.rs.hal.Link} - this is also true for collections of links
+ */
+package dk.nykredit.jackson.dataformat.hal;
