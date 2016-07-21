@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation to mark something as being a resource representation.
+ * Annotation to mark something as being a HAL resource representation.
  */
 @Target({ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)

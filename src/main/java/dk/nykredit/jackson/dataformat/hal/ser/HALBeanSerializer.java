@@ -80,6 +80,7 @@ public class HALBeanSerializer extends BeanSerializerBase {
                             String val = "".equals(er.value()) ? prop.getName() : er.value();
                             addEmbeddedProperty(val, prop);
                         }
+
                     } else if (prop.getAnnotation(Link.class) != null) {
                         Link l = prop.getAnnotation(Link.class);
                         String val = "".equals(l.value()) ? prop.getName() : l.value();

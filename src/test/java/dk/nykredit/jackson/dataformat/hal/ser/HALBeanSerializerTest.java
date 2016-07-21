@@ -9,22 +9,15 @@ import java.util.Collection;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dk.nykredit.jackson.dataformat.hal.HALLink;
-import dk.nykredit.jackson.dataformat.hal.JacksonHALModule;
+import dk.nykredit.jackson.dataformat.hal.HALMapper;
 import dk.nykredit.jackson.dataformat.hal.annotation.EmbeddedResource;
 import dk.nykredit.jackson.dataformat.hal.annotation.Link;
 import dk.nykredit.jackson.dataformat.hal.annotation.Resource;
-import org.junit.Before;
 import org.junit.Test;
 
 public class HALBeanSerializerTest {
 
-    ObjectMapper om;
-
-    @Before
-    public void createObjectMapper() {
-        om = new ObjectMapper();
-        om.registerModule(new JacksonHALModule());
-    }
+    ObjectMapper om = new HALMapper();
 
     @Test
     public void testSerialization() throws Exception {
