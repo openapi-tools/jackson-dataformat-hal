@@ -1,6 +1,5 @@
 package dk.nykredit.jackson.dataformat.hal.ser;
 
-import static org.junit.Assert.assertEquals;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -14,8 +13,9 @@ import dk.nykredit.jackson.dataformat.hal.annotation.EmbeddedResource;
 import dk.nykredit.jackson.dataformat.hal.annotation.Link;
 import dk.nykredit.jackson.dataformat.hal.annotation.Resource;
 import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
-public class HALBeanSerializerTest {
+public class HALBeanSerializerIT {
 
     ObjectMapper om = new HALMapper();
 

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import dk.nykredit.jackson.dataformat.hal.annotation.EmbeddedResource;
 import dk.nykredit.jackson.dataformat.hal.annotation.Link;
 import dk.nykredit.jackson.dataformat.hal.annotation.Resource;
+import dk.nykredit.jackson.dataformat.hal.deser.HALBeanDeserializerModifier;
 import dk.nykredit.jackson.dataformat.hal.ser.HALBeanSerializerModifier;
 
 /**
@@ -19,5 +20,6 @@ public class JacksonHALModule extends SimpleModule {
     @Override
     public void setupModule(SetupContext context) {
         context.addBeanSerializerModifier(new HALBeanSerializerModifier());
+        context.addBeanDeserializerModifier(new HALBeanDeserializerModifier());
     }
 }
