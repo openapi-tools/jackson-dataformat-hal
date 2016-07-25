@@ -12,9 +12,11 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-public class HALBeanDeserializerTest {
-    static final String HAL_INPUT = "{"
+public class HALBeanDeserializerIT {
+    static final String HAL_DOC = "{"
             + "\"_links\":{"
             + "\"child\":[{\"href\":\"/top/1/child/1\"},{\"href\":\"/top/1/child/2\"}],"
             + "\"empty:list\":[],"
@@ -33,7 +35,7 @@ public class HALBeanDeserializerTest {
 
     @Test
     public void testDeserialization() throws Exception {
-        TopResource tr = om.readValue(new StringReader(HAL_INPUT), TopResource.class);
+        TopResource tr = om.readValue(new StringReader(HAL_DOC), TopResource.class);
         assertEquals("1", tr.id);
         assertEquals("/top/1", tr.self.getHref());
         assertEquals("/uri/{id}", tr.templated.getHref());

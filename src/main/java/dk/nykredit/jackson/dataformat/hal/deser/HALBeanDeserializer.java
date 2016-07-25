@@ -7,52 +7,19 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.BeanDeserializerBase;
-import com.fasterxml.jackson.databind.deser.impl.ObjectIdReader;
+import com.fasterxml.jackson.databind.deser.std.DelegatingDeserializer;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.util.NameTransformer;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Deserializer to handle incomming application/hal+json.
  */
-public class HALBeanDeserializer extends BeanDeserializerBase {
+public class HALBeanDeserializer extends DelegatingDeserializer {
 
-    public HALBeanDeserializer(BeanDeserializerBase src) {
-        super(src);
-        _delegateDeserializer = src;
-    }
-
-    @Override
-    public JsonDeserializer<Object> unwrappingDeserializer(NameTransformer unwrapper) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public BeanDeserializerBase withObjectIdReader(ObjectIdReader oir) {
-        return this;
-    }
-
-    @Override
-    public BeanDeserializerBase withIgnorableProperties(Set<String> ignorableProps) {
-        return this;
-    }
-
-    @Override
-    protected BeanDeserializerBase asArrayDeserializer() {
-        return this;
-    }
-
-    @Override
-    public Object deserializeFromObject(JsonParser p, DeserializationContext ctxt) throws IOException {
-        return deserialize(p, ctxt);
-    }
-
-    @Override
-    protected Object _deserializeUsingPropertyBased(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public HALBeanDeserializer(BeanDeserializerBase delegate) {
+        super(delegate);
     }
 
     @Override
@@ -76,7 +43,12 @@ public class HALBeanDeserializer extends BeanDeserializerBase {
 
         final JsonParser modifiedParser = tn.traverse(p.getCodec());
         modifiedParser.nextToken();
-        return _delegateDeserializer.deserialize(modifiedParser, ctxt);
+        return _delegatee.deserialize(modifiedParser, ctxt);
+    }
+
+    @Override
+    protected JsonDeserializer<?> newDelegatingInstance(JsonDeserializer<?> newDelegatee) {
+        return new HALBeanDeserializer((BeanDeserializerBase) newDelegatee);
     }
     
 }
