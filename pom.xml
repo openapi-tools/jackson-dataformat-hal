@@ -2,13 +2,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-
-    <!--parent>
-        <groupId>dk.nykredit.nif</groupId>
-        <artifactId>nif</artifactId>
-        <version>4.1.16-SNAPSHOT</version>
-    </parent-->
-
     
     <name>Jackson HAL Dataformat</name>
     <groupId>dk.nykredit.jackson.dataformat</groupId>
@@ -17,6 +10,22 @@
     <packaging>jar</packaging>
 
     <description>Dataformat extension for Jackson to handle the HAL JSON format.</description>
+
+    <licenses>
+        <license>
+          <name>MIT License</name>
+          <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+          <name>Thor Anker Kvisgård Lange</name>
+          <email>tal@nykredit.dk</email>
+          <organization>Nykredit</organization>
+          <organizationUrl>http://www.nykredit.dk</organizationUrl>
+        </developer>
+    </developers>
 
     <scm>
         <developerConnection>scm:git:https://github.com/Nykredit/jackson-dataformat-hal.git</developerConnection>
