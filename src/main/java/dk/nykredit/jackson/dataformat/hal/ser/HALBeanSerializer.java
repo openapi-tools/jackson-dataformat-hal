@@ -21,8 +21,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Serializer to handle {@link Resource} beans ensuring they are serialized according to the HAL specification. This implies
- * placing links inside the <code>_links</code> property and embedded objects inside the <code>_embedded</code> property.
+ * Serializer to handle {@link dk.nykredit.jackson.dataformat.hal.annotation.Resource} beans ensuring they are serialized
+ * according to the HAL specification. This implies placing links inside the <code>_links</code> property and embedded
+ * objects inside the <code>_embedded</code> property.
  */
 public class HALBeanSerializer extends BeanSerializerBase {
     private static final Logger LOG = LoggerFactory.getLogger(HALBeanSerializer.class);

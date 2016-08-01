@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Marks a {@link HALLink} instance or collection for inclusion in the _links of the resource.
+ * Marks a {@link dk.nykredit.jackson.dataformat.hal.HALLink} instance or collection for inclusion in the _links of the resource.
  */
 @Target({ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
