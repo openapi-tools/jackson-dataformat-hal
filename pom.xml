@@ -5,7 +5,7 @@
     
     <name>Jackson HAL Dataformat</name>
     <groupId>dk.nykredit.jackson.dataformat</groupId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <artifactId>jackson-dataformat-hal</artifactId>
     <packaging>jar</packaging>
 
