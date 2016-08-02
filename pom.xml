@@ -10,6 +10,7 @@
     <packaging>jar</packaging>
 
     <description>Dataformat extension for Jackson to handle the HAL JSON format.</description>
+    <url>https://github.com/Nykredit/jackson-dataformat-hal</url>
 
     <licenses>
         <license>
