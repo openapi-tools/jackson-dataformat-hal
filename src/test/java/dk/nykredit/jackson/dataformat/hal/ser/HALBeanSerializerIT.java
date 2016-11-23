@@ -27,7 +27,6 @@ public class HALBeanSerializerIT {
                 + "\"_links\":{"
                 + "\"child\":[{\"href\":\"/top/1/child/1\"},{\"href\":\"/top/1/child/2\"}],"
                 + "\"empty:list\":[],"
-                + "\"null:list\":[],"
                 + "\"self\":{\"href\":\"/top/1\"},"
                 + "\"templated\":{\"href\":\"/uri/{id}\",\"templated\":true}"
                 + "},"

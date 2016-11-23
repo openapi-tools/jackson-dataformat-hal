@@ -14,6 +14,7 @@ public @interface EmbeddedResource {
 
     /**
      * Relation name - if not set the property name will be used.
+     * @return The name of the relation realized by the embedded resource.
      */
     String value() default "";
 

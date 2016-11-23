@@ -94,6 +94,7 @@ public class HALLink {
 
         /**
          * Should be used when constructing a templated link.
+         * @param href Template URI to construct link from.
          */
         public Builder(String href) {
             this.href = href;
@@ -102,6 +103,7 @@ public class HALLink {
 
         /**
          * Should be used when constructing a link which is not templated.
+         * @param href URI to construct link from.
          */
         public Builder(URI href) {
             this.href = href.toString();

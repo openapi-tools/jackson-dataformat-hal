@@ -13,6 +13,7 @@ import java.lang.annotation.Target;
 public @interface Link {
     /**
      * Relation name - if not set the property name will be used.
+     * @return name of the relation represented by the link.
      */
     String value() default "";
 }
