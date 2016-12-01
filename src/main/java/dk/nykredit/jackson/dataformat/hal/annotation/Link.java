@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  * Marks a {@link dk.nykredit.jackson.dataformat.hal.HALLink} instance or collection for inclusion in the _links of the resource.
  */
-@Target({ElementType.FIELD })
+@Target({ElementType.FIELD, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Link {
     /**

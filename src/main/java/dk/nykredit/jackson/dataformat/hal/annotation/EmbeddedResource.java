@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  * Marking field in a resource as embedded resource.
  */
-@Target({ElementType.FIELD })
+@Target({ElementType.FIELD, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface EmbeddedResource {
 

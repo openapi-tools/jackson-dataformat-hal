@@ -1,8 +1,10 @@
 package dk.nykredit.jackson.dataformat.hal.deser;
 
-import com.fasterxml.jackson.databind.introspect.AnnotatedField;
+import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
+import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
 import dk.nykredit.jackson.dataformat.hal.annotation.EmbeddedResource;
 import dk.nykredit.jackson.dataformat.hal.annotation.Link;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -34,8 +36,13 @@ public enum ReservedProperty {
         return name;
     }
 
-    public String alternateName(AnnotatedField af, String originalName) {
-        Annotation o = af.getAnnotation(annotation);
+    public String alternateName(BeanPropertyDefinition bpd, String originalName) {
+        AnnotatedMember annotatedMember = firstNonNull(bpd.getField(), bpd.getSetter(), bpd.getGetter());
+        if (annotatedMember == null) {
+            return originalName;
+        }
+
+        Annotation o = annotatedMember.getAnnotation(annotation);
         if (o != null) {
             try {
                 String alternateName = (String) valueMethod.invoke(o);
@@ -51,4 +58,12 @@ public enum ReservedProperty {
         return prefix.toString() + ":" + originalName;
     }
 
+    static <T> T firstNonNull(T... vals) {
+        for (T v : vals) {
+            if (v != null)
+                return v;
+        }
+
+        return null;
+    }
 }
