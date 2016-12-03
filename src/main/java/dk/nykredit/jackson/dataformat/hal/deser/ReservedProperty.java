@@ -58,6 +58,7 @@ public enum ReservedProperty {
         return prefix.toString() + ":" + originalName;
     }
 
+    @SafeVarargs
     static <T> T firstNonNull(T... vals) {
         for (T v : vals) {
             if (v != null)

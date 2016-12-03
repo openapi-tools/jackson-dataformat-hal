@@ -19,7 +19,7 @@ import static org.junit.Assert.assertFalse;
 /**
  * Verify that HAL annotations can be used on methods as well as fields.
  */
-public class HALBeanDeserializerMethodAnn {
+public class HALBeanDeserializerMethodAnnIT {
     ObjectMapper om = new HALMapper();
 
     @Test

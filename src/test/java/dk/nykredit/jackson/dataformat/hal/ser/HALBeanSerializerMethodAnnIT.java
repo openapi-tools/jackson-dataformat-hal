@@ -1,6 +1,5 @@
 package dk.nykredit.jackson.dataformat.hal.ser;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dk.nykredit.jackson.dataformat.hal.HALLink;
@@ -20,7 +19,7 @@ import static org.junit.Assert.assertFalse;
 /**
  * Verify that HAL annotations can be used on methods as well as fields.
  */
-public class HALBeanSerializerMethodAnn {
+public class HALBeanSerializerMethodAnnIT {
     ObjectMapper om = new HALMapper();
 
     @Test
