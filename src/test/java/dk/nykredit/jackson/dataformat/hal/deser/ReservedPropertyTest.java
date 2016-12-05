@@ -42,7 +42,7 @@ public class ReservedPropertyTest {
         am.addIfNotPresent(field.getAnnotation(Link.class));
         AnnotatedField af = new AnnotatedField(null, field, am);
         when(bpd.getField()).thenReturn(af);
-        
+
         String alternateName = ReservedProperty.LINKS.alternateName(bpd, "orig-name");
 
         assertTrue(alternateName.matches(".+:orig-name"));
@@ -57,15 +57,16 @@ public class ReservedPropertyTest {
         am.addIfNotPresent(field.getAnnotation(Link.class));
         AnnotatedField af = new AnnotatedField(null, field, am);
         when(bpd.getField()).thenReturn(af);
-        
+
         String alternateName = ReservedProperty.LINKS.alternateName(bpd, "orig-name");
 
         assertTrue(alternateName.matches(".+:alternate-name"));
     }
-    
+
     static class POJO {
+
         String bareField;
-        
+
         @Link
         String annotatedField;
 
