@@ -78,6 +78,54 @@ public class HALLink {
         return hreflang;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        HALLink link = (HALLink) o;
+
+        if (href != null ? !href.equals(link.href) : link.href != null) {
+            return false;
+        }
+        if (templated != null ? !templated.equals(link.templated) : link.templated != null) {
+            return false;
+        }
+        if (type != null ? !type.equals(link.type) : link.type != null) {
+            return false;
+        }
+        if (deprecation != null ? !deprecation.equals(link.deprecation) : link.deprecation != null) {
+            return false;
+        }
+        if (name != null ? !name.equals(link.name) : link.name != null) {
+            return false;
+        }
+        if (profile != null ? !profile.equals(link.profile) : link.profile != null) {
+            return false;
+        }
+        if (title != null ? !title.equals(link.title) : link.title != null) {
+            return false;
+        }
+        return hreflang != null ? hreflang.equals(link.hreflang) : link.hreflang == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = href != null ? href.hashCode() : 0;
+        result = 31 * result + (templated != null ? templated.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (deprecation != null ? deprecation.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (profile != null ? profile.hashCode() : 0);
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (hreflang != null ? hreflang.hashCode() : 0);
+        return result;
+    }
+
     /**
      * Builder to help build {@link HALLink} instances.
      */
