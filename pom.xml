@@ -4,13 +4,13 @@
     <modelVersion>4.0.0</modelVersion>
     
     <name>Jackson HAL Dataformat</name>
-    <groupId>dk.nykredit.jackson.dataformat</groupId>
+    <groupId>io.openapitools.jackson.dataformat</groupId>
     <version>1.0.2-SNAPSHOT</version>
     <artifactId>jackson-dataformat-hal</artifactId>
     <packaging>jar</packaging>
 
     <description>Dataformat extension for Jackson to handle the HAL JSON format.</description>
-    <url>https://github.com/Nykredit/jackson-dataformat-hal</url>
+    <url>https://github.com/openapi-tools/jackson-dataformat-hal</url>
 
     <licenses>
         <license>
@@ -22,16 +22,16 @@
     <developers>
         <developer>
           <name>Thor Anker Kvisgård Lange</name>
-          <email>tal@nykredit.dk</email>
-          <organization>Nykredit</organization>
-          <organizationUrl>http://www.nykredit.dk</organizationUrl>
+          <email>thor.lange@gmail.com</email>
+          <organization>Open API Tools</organization>
+          <organizationUrl>https://github.com/openapitools</organizationUrl>
         </developer>
     </developers>
 
     <scm>
-        <connection>scm:git:https://github.com/Nykredit/jackson-dataformat-hal.git</connection>
-        <developerConnection>scm:git:https://github.com/Nykredit/jackson-dataformat-hal.git</developerConnection>
-        <url>https://github.com/Nykredit/jackson-dataformat-hal/tree/master</url>
+        <connection>scm:git:https://github.com/openapi-tools/jackson-dataformat-hal.git</connection>
+        <developerConnection>scm:git:https://github.com/openapi-tools/jackson-dataformat-hal.git</developerConnection>
+        <url>https://github.com/openapi-tools/jackson-dataformat-hal/tree/master</url>
       <tag>HEAD</tag>
     </scm>
 

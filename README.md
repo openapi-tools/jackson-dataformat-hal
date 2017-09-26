@@ -10,8 +10,8 @@ the normal Jackson JSON handling.
 # Status
 Module is considered production ready.
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/dk.nykredit.jackson.dataformat/jackson-dataformat-hal/badge.svg)](https://maven-badges.herokuapp.com/maven-central/dk.nykredit.jackson.dataformat/jackson-dataformat-hal/)
-[![Javadoc](https://javadoc-emblem.rhcloud.com/doc/dk.nykredit.jackson.dataformat/jackson-dataformat-hal/badge.svg)](https://www.javadoc.io/doc/dk.nykredit.jackson.dataformat/jackson-dataformat-hal)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.openapitools.jackson.dataformat/jackson-dataformat-hal/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.openapitools.jackson.dataformat/jackson-dataformat-hal/)
+[![Javadoc](https://javadoc-emblem.rhcloud.com/doc/io.openapitools.jackson.dataformat/jackson-dataformat-hal/badge.svg)](https://www.javadoc.io/doc/io.openapitools.jackson.dataformat/jackson-dataformat-hal)
 [![Build status](https://travis-ci.org/openapi-tools/jackson-dataformat-hal.svg?branch=master)](https://travis-ci.org/openapi-tools/jackson-dataformat-hal)
 [![Coverage Status](https://codecov.io/gh/openapi-tools/jackson-dataformat-hal/coverage.svg?branch=master)](https://codecov.io/gh/openapi-tools/jackson-dataformat-hal)
 
@@ -120,6 +120,12 @@ jackson-jaxrs-providers can be used to register the `HALMapper`.
 ClientBuilder cb = ClientBuilder.newBuilder();
 Client client = cb.register(new JacksonJsonProvider(new HALMapper())).build();
 ```
+## HALLink extended with temporal aspect
+The HALLink is extended with a `seen` property. This is beyond the current specification of HAL.
+An addendum or change to HAL will be proposed to incoorporate the seen property in the `_Link` specification.
+The purpose of the `seen` property is to give consumers of a service the ability to judge for themselves whether
+the last time a HAL related object was seen either as a `link` or as an `embedded` object.
+
 
 ## Knows Limitations
 

@@ -1,1 +1,1 @@
-dk.nykredit.jackson.dataformat.hal.HALMapper
+io.openapitools.jackson.dataformat.hal.HALMapper
