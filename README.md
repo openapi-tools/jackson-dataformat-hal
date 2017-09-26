@@ -12,6 +12,8 @@ Module is considered production ready.
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.openapitools.jackson.dataformat/jackson-dataformat-hal/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.openapitools.jackson.dataformat/jackson-dataformat-hal/)
 [![Javadoc](https://javadoc-emblem.rhcloud.com/doc/io.openapitools.jackson.dataformat/jackson-dataformat-hal/badge.svg)](https://www.javadoc.io/doc/io.openapitools.jackson.dataformat/jackson-dataformat-hal)
+[![Build status](https://travis-ci.org/openapi-tools/jackson-dataformat-hal.svg?branch=master)](https://travis-ci.org/openapi-tools/jackson-dataformat-hal)
+[![Coverage Status](https://codecov.io/gh/openapi-tools/jackson-dataformat-hal/coverage.svg?branch=master)](https://codecov.io/gh/openapi-tools/jackson-dataformat-hal)
 
 # Usage
 
