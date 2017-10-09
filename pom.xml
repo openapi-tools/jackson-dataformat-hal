@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     
     <name>Jackson HAL Dataformat</name>
-    <groupId>dk.nykredit.jackson.dataformat</groupId>
+    <groupId>io.openapitools.jackson.dataformat</groupId>
     <version>1.0.4-SNAPSHOT</version>
     <artifactId>jackson-dataformat-hal</artifactId>
     <packaging>jar</packaging>
