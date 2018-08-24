@@ -14,7 +14,14 @@ public class HALMapper extends ObjectMapper {
     public HALMapper() {
         registerModule(DEFAULT_HAL_MODULE);
     }
-    
+
+    /**
+     * Create new HAL mapper with CURIE support.
+     */
+    public HALMapper(CURIEProvider curieProvider) {
+        registerModule(new JacksonHALModule(curieProvider));
+    }
+
     /**
      * Copy constructor to support {@link #copy()}.
      * @param mapper Mapper to copy.
@@ -23,7 +30,7 @@ public class HALMapper extends ObjectMapper {
         super(mapper);
         registerModule(DEFAULT_HAL_MODULE);
     }
-    
+
     @Override
     public ObjectMapper copy() {
         return new HALMapper(this);

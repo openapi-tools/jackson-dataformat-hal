@@ -38,7 +38,7 @@ public class HALBeanSerializerIT {
                 + "\"id\":\"1\"}",
                 json);
     }
-
+    
     @Resource
     public static class TopResource {
 
