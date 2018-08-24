@@ -5,12 +5,14 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.BeanPropertyWriter;
 import com.fasterxml.jackson.databind.ser.impl.ObjectIdWriter;
 import com.fasterxml.jackson.databind.ser.std.BeanSerializerBase;
+import io.openapitools.jackson.dataformat.hal.CURIEProvider;
 import io.openapitools.jackson.dataformat.hal.HALLink;
 import io.openapitools.jackson.dataformat.hal.annotation.EmbeddedResource;
 import io.openapitools.jackson.dataformat.hal.annotation.Link;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -27,9 +29,11 @@ import org.slf4j.LoggerFactory;
 public class HALBeanSerializer extends BeanSerializerBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(HALBeanSerializer.class);
+    private final CURIEProvider curieProvider;
 
-    public HALBeanSerializer(BeanSerializerBase src) {
+    public HALBeanSerializer(BeanSerializerBase src, CURIEProvider curieProvider) {
         super(src);
+        this.curieProvider = curieProvider;
     }
 
     @Override
@@ -66,6 +70,7 @@ public class HALBeanSerializer extends BeanSerializerBase {
         private List<BeanPropertyWriter> state = new ArrayList<>();
         private Map<String, LinkProperty> links = new TreeMap<>();
         private Map<String, BeanPropertyWriter> embedded = new TreeMap<>();
+        private Map<String, HALLink> curies = new HashMap<>();
 
         public FilteredProperties(Object bean, SerializerProvider provider) throws IOException {
             for (BeanPropertyWriter prop : _props) {
@@ -95,6 +100,10 @@ public class HALBeanSerializer extends BeanSerializerBase {
                     wrapAndThrow(provider, e, bean, prop.getName());
                 }
             }
+            if ((null != curieProvider) && (curies.size() > 0)) {
+                addCuries(curies);
+            }
+
         }
 
         public void serialize(Object bean, JsonGenerator jgen, SerializerProvider provider) throws IOException {
@@ -145,11 +154,45 @@ public class HALBeanSerializer extends BeanSerializerBase {
             if (links.put(rel, new LinkProperty(link)) != null) {
                 LOG.warn("Link resource already existed with rel [{}] in class [{}]", rel, _handledType);
             }
+            if (null != curieProvider) {
+                addCURIE(rel, link);
+            }
         }
 
         private void addLinks(String rel, Collection<HALLink> links) {
             if (this.links.put(rel, new LinkProperty(links)) != null) {
                 LOG.warn("Link resource already existed with rel [{}] in class [{}]", rel, _handledType);
+            }
+            if (null != curieProvider) {
+                for (HALLink halLink: links) {
+                    addCURIE(rel, halLink);
+                }
+            }
+        }
+
+        private void addCURIE(String rel, HALLink link) {
+            if (curieProvider.shouldProvideCURIE(rel, link)) {
+                HALLink curie = curieProvider.provideCURIE(rel, link);
+                checkForDivergentCURIEs(curie);
+                curies.put(curie.getName(), curie);
+            }
+        }
+
+        private void checkForDivergentCURIEs(HALLink curie) {
+            // Check if CURIE already exists with a different HREF.  That's a
+            // mistake if it does.
+            if (curies.containsKey(curie.getName())) {
+                HALLink existingCURIE = curies.get(curie.getName());
+                if (!existingCURIE.getHref().equals(curie.getHref())) {
+                    LOG.warn("CURIE [{}] detected with different hrefs [{}], [{}]",
+                            curie.getName(), curie.getHref(), existingCURIE.getHref());
+                }
+            }
+        }
+
+        private void addCuries(Map<String, HALLink> curies) {
+            if (this.links.put("curies", new LinkProperty(curies.values())) != null) {
+                LOG.warn("Link resource already existed with rel [{}] in class [{}]", "curies", _handledType);
             }
         }
 

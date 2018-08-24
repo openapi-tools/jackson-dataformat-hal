@@ -13,13 +13,21 @@ import io.openapitools.jackson.dataformat.hal.ser.HALBeanSerializerModifier;
  */
 public class JacksonHALModule extends SimpleModule {
 
+    private final CURIEProvider curieProvider;
+
     public JacksonHALModule() {
         super("JacksonHALModule", PackageVersion.VERSION);
+        curieProvider = null;
+    }
+
+    public JacksonHALModule(CURIEProvider curieProvider) {
+        super("JacksonHALModule", PackageVersion.VERSION);
+        this.curieProvider = curieProvider;
     }
 
     @Override
     public void setupModule(SetupContext context) {
-        context.addBeanSerializerModifier(new HALBeanSerializerModifier());
+        context.addBeanSerializerModifier(new HALBeanSerializerModifier(curieProvider));
         context.addBeanDeserializerModifier(new HALBeanDeserializerModifier());
     }
 }
