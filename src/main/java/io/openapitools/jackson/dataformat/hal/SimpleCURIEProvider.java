@@ -28,7 +28,7 @@ public class SimpleCURIEProvider implements CURIEProvider {
     @Override
     public HALLink provideCURIE(String rel, HALLink halLink) {
         String[] relParts = rel.split(":");
-        return new HALLink.Builder(relsBaseURI + "/" + relParts[0] + "-" + relParts[1])
+        return new HALLink.Builder(relsBaseURI + "/" + relParts[0] + "-{rel}")
                 .name(relParts[0])
                 .templated(true)
                 .build();
