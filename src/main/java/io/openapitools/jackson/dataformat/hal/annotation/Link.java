@@ -16,4 +16,10 @@ public @interface Link {
      * @return name of the relation represented by the link.
      */
     String value() default "";
+
+    /**
+     * CURIE name - if not set then no CURIE will be associated.
+     * @return name of the CURIE intended to be used with this link.
+     */
+    String curie() default "";
 }

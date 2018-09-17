@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.openapitools.jackson.dataformat.hal.HALLink;
 import io.openapitools.jackson.dataformat.hal.HALMapper;
+import io.openapitools.jackson.dataformat.hal.annotation.Curie;
+import io.openapitools.jackson.dataformat.hal.annotation.Curies;
 import io.openapitools.jackson.dataformat.hal.annotation.EmbeddedResource;
 import io.openapitools.jackson.dataformat.hal.annotation.Link;
 import io.openapitools.jackson.dataformat.hal.annotation.Resource;
@@ -27,6 +29,7 @@ public class HALBeanSerializerMethodAnnIT {
         TestResource resource = new TestResource();
         resource.setSelf(new HALLink.Builder("http://self.url").build());
         resource.setRelatedLink1(new HALLink.Builder("http://other.link.url").build());
+        resource.setRelatedLink2(new HALLink.Builder("http://other.link.url2").build());
         resource.setName("POJO name");
         resource.setAuxData("added information");
 
@@ -37,7 +40,16 @@ public class HALBeanSerializerMethodAnnIT {
 
         JsonNode links = jsonNode.path("_links");
         assertFalse(links.isMissingNode());
-        assertEquals(2, links.size());
+        assertEquals(4, links.size());
+
+        System.out.println(links);
+
+        JsonNode relative1UsingCurie = links.get("cur1:relative2");
+        assertFalse(relative1UsingCurie.isMissingNode());
+
+        JsonNode curies = links.get("curies");
+        assertFalse(curies.isMissingNode());
+        assertEquals(1, curies.size());
 
         JsonNode embedded = jsonNode.path("_embedded");
         assertFalse(embedded.isMissingNode());
@@ -46,7 +58,34 @@ public class HALBeanSerializerMethodAnnIT {
         assertEquals("POJO name", jsonNode.get("name").asText());
     }
 
+    @Test
+    public void singleCurieTest() throws Exception {
+
+        // test support for @Curie as opposed to @Curies
+
+        SingleCurieResource resource = new SingleCurieResource();
+        resource.setRelatedLink1(new HALLink.Builder("http://other.link.url").build());
+
+        final String json = om.writeValueAsString(resource);
+
+        // Verify generated json
+        JsonNode jsonNode = new ObjectMapper().readTree(json);
+
+        JsonNode links = jsonNode.path("_links");
+        assertFalse(links.isMissingNode());
+        assertEquals(2, links.size());
+
+        JsonNode relative1UsingCurie = links.get("cur1:relative1");
+        assertFalse(relative1UsingCurie.isMissingNode());
+
+        JsonNode curies = links.get("curies");
+        assertFalse(curies.isMissingNode());
+        assertEquals(1, curies.size());
+    }
+
     @Resource
+    @Curies({@Curie(href = "http://docs.my.site/{rel}", curie = "cur1"),
+             @Curie(href = "http://docs.my.site/{rel}", curie = "cur2-not-used")})
     public static class TestResource {
         // Guard against Jackson unintentionally using class fields for serialization.
         private final Map<String, Object> fields = new HashMap<>();
@@ -72,9 +111,18 @@ public class HALBeanSerializerMethodAnnIT {
             return (HALLink) fields.get("friend1");
         }
 
+        public HALLink getRelatedLink2() {
+            return (HALLink) fields.get("friend2");
+        }
+
         @Link("relative1")
         public void setRelatedLink1(HALLink link) {
             fields.put("friend1", link);
+        }
+
+        @Link(value = "relative2", curie = "cur1")
+        public void setRelatedLink2(HALLink link) {
+            fields.put("friend2", link);
         }
 
         @EmbeddedResource
@@ -85,6 +133,24 @@ public class HALBeanSerializerMethodAnnIT {
         public String getAuxData() {
             return (String) fields.get("auxdata");
         }
+    }
+
+    // test support for @Curie as opposed to @Curies
+    @Resource
+    @Curie(href = "http://docs.my.site/{rel}", curie = "cur1")
+    public static class SingleCurieResource {
+
+        private final Map<String, Object> fields = new HashMap<>();
+
+        public HALLink getRelatedLink1() {
+            return (HALLink) fields.get("friend1");
+        }
+
+        @Link(value = "relative1", curie = "cur1")
+        public void setRelatedLink1(HALLink link) {
+            fields.put("friend1", link);
+        }
+
     }
 }
 
