@@ -1,11 +1,15 @@
 package io.openapitools.jackson.dataformat.hal.ser;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.BeanDescription;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.BeanPropertyWriter;
 import com.fasterxml.jackson.databind.ser.impl.ObjectIdWriter;
 import com.fasterxml.jackson.databind.ser.std.BeanSerializerBase;
+import com.fasterxml.jackson.databind.util.Annotations;
 import io.openapitools.jackson.dataformat.hal.HALLink;
+import io.openapitools.jackson.dataformat.hal.annotation.Curie;
+import io.openapitools.jackson.dataformat.hal.annotation.Curies;
 import io.openapitools.jackson.dataformat.hal.annotation.EmbeddedResource;
 import io.openapitools.jackson.dataformat.hal.annotation.Link;
 import java.io.IOException;
@@ -16,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,9 +33,11 @@ import org.slf4j.LoggerFactory;
 public class HALBeanSerializer extends BeanSerializerBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(HALBeanSerializer.class);
+    private final BeanDescription beanDescription;
 
-    public HALBeanSerializer(BeanSerializerBase src) {
+    public HALBeanSerializer(BeanSerializerBase src, BeanDescription beanDescription) {
         super(src);
+        this.beanDescription = beanDescription;
     }
 
     @Override
@@ -54,7 +62,7 @@ public class HALBeanSerializer extends BeanSerializerBase {
 
     @Override
     public void serialize(Object bean, JsonGenerator jgen, SerializerProvider provider) throws IOException {
-        FilteredProperties filtered = new FilteredProperties(bean, provider);
+        FilteredProperties filtered = new FilteredProperties(bean, provider, beanDescription);
         filtered.serialize(bean, jgen, provider);
     }
 
@@ -67,7 +75,16 @@ public class HALBeanSerializer extends BeanSerializerBase {
         private Map<String, LinkProperty> links = new TreeMap<>();
         private Map<String, BeanPropertyWriter> embedded = new TreeMap<>();
 
-        public FilteredProperties(Object bean, SerializerProvider provider) throws IOException {
+        // All of the possible curies that COULD be used (provided via Curie/Curies annotations)
+        private Map<String, String> curieMap = new TreeMap<>();
+        // All of the curies that actually ARE being used (provided via Link annotations)
+        private Set<String> curiesInUse = new TreeSet<>();
+
+        public FilteredProperties(Object bean, SerializerProvider provider,
+                                  BeanDescription beanDescription) throws IOException {
+
+            populateCurieMap(beanDescription);
+
             for (BeanPropertyWriter prop : _props) {
                 try {
                     if (prop.getAnnotation(EmbeddedResource.class) != null) {
@@ -81,11 +98,15 @@ public class HALBeanSerializer extends BeanSerializerBase {
                     } else if (prop.getAnnotation(Link.class) != null) {
                         Link l = prop.getAnnotation(Link.class);
                         String relation = "".equals(l.value()) ? prop.getName() : l.value();
+                        String curie = "".equals(l.curie()) ? null : l.curie();
+                        if (!"".equals(l.curie())) {
+                            curiesInUse.add(l.curie());
+                        }
                         Object value = prop.get(bean);
                         if (value instanceof Collection) {
-                            addLinks(relation, (Collection<HALLink>) prop.get(bean));
+                            addLinks(relation, (Collection<HALLink>) prop.get(bean), curie);
                         } else if (value instanceof HALLink) {
-                            addLink(relation, (HALLink) prop.get(bean));
+                            addLink(relation, (HALLink) prop.get(bean), curie);
                         }
 
                     } else {
@@ -94,6 +115,49 @@ public class HALBeanSerializer extends BeanSerializerBase {
                 } catch (Exception e) {
                     wrapAndThrow(provider, e, bean, prop.getName());
                 }
+            }
+
+            if (!curiesInUse.isEmpty()) {
+                addCurieLinks();
+            }
+        }
+
+        private void addCurieLinks() {
+            Collection<HALLink> curieLinks = new ArrayList<>();
+            for (String curie: curiesInUse) {
+                if (curieMap.containsKey(curie)) {
+                    curieLinks.add(new HALLink.Builder(curieMap.get(curie))
+                            .name(curie)
+                            .build());
+                } else {
+                    LOG.warn("No Curie/Curies annotation provided for [{}]", curie);
+                }
+            }
+            addLinks("curies", curieLinks, null);
+        }
+
+        private void populateCurieMap(BeanDescription beanDescription) {
+
+            // Curies should only be shown if they are being used by some other link.
+            // Populate CurieMap now so that it can be referred to later during link
+            // serialisation.  Note - either a single Curie annotation can be used by
+            // itself or a collection can be wrapped using Curies.
+
+            List<Curie> curieAnnotations = new ArrayList<>();
+            if (null != beanDescription.getClassAnnotations().get(Curie.class)) {
+                curieAnnotations.add(beanDescription.getClassAnnotations().get(Curie.class));
+            }
+            if (null != beanDescription.getClassAnnotations().get(Curies.class)) {
+                for (Curie curie : beanDescription.getClassAnnotations().get(Curies.class).value()) {
+                    curieAnnotations.add(curie);
+                }
+            }
+
+            for (Curie curie : curieAnnotations) {
+                if (curieMap.containsKey(curie.curie())) {
+                    LOG.warn("Curie annotation already exists [{}]", curie.curie());
+                }
+                curieMap.put(curie.curie(), curie.href());
             }
         }
 
@@ -141,16 +205,20 @@ public class HALBeanSerializer extends BeanSerializerBase {
             }
         }
 
-        private void addLink(String rel, HALLink link) {
-            if (links.put(rel, new LinkProperty(link)) != null) {
+        private void addLink(String rel, HALLink link, String curie) {
+            if (links.put(applyCurieToRel(rel, curie), new LinkProperty(link)) != null) {
                 LOG.warn("Link resource already existed with rel [{}] in class [{}]", rel, _handledType);
             }
         }
 
-        private void addLinks(String rel, Collection<HALLink> links) {
-            if (this.links.put(rel, new LinkProperty(links)) != null) {
+        private void addLinks(String rel, Collection<HALLink> links, String curie) {
+            if (this.links.put(applyCurieToRel(rel, curie), new LinkProperty(links)) != null) {
                 LOG.warn("Link resource already existed with rel [{}] in class [{}]", rel, _handledType);
             }
+        }
+
+        private String applyCurieToRel(String rel, String curie) {
+            return (null == curie) ? rel : curie + ":" + rel;
         }
 
     }

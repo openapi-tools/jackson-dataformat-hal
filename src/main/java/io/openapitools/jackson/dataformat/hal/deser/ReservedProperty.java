@@ -2,6 +2,7 @@ package io.openapitools.jackson.dataformat.hal.deser;
 
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
 import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
+import io.openapitools.jackson.dataformat.hal.annotation.Curies;
 import io.openapitools.jackson.dataformat.hal.annotation.EmbeddedResource;
 import io.openapitools.jackson.dataformat.hal.annotation.Link;
 
@@ -44,6 +45,13 @@ public enum ReservedProperty {
 
         Annotation o = annotatedMember.getAnnotation(annotation);
         if (o != null) {
+            // Handle the special case for curies first...
+            if (o.annotationType() == Link.class) {
+                String curie = ((Link) o).curie();
+                if (curie != null && !curie.isEmpty()) {
+                    return alternateName(curie + ":" + originalName);
+                }
+            }
             try {
                 String alternateName = (String) valueMethod.invoke(o);
                 return alternateName(alternateName.isEmpty() ? originalName : alternateName);

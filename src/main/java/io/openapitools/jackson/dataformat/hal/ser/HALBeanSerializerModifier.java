@@ -15,7 +15,7 @@ public class HALBeanSerializerModifier extends BeanSerializerModifier {
     public JsonSerializer<?> modifySerializer(SerializationConfig config, BeanDescription beanDesc, JsonSerializer<?> serializer) {
         Resource ann = beanDesc.getClassAnnotations().get(Resource.class);
         if (ann != null) {
-            return new HALBeanSerializer((BeanSerializer) serializer);
+            return new HALBeanSerializer((BeanSerializer) serializer, beanDesc);
         }
         return serializer;
     }
