@@ -42,8 +42,6 @@ public class HALBeanSerializerMethodAnnIT {
         assertFalse(links.isMissingNode());
         assertEquals(4, links.size());
 
-        System.out.println(links);
-
         JsonNode relative1UsingCurie = links.get("cur1:relative2");
         assertFalse(relative1UsingCurie.isMissingNode());
 

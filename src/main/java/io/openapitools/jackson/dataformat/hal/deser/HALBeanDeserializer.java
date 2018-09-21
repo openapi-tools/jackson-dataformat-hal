@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * Deserializer to handle incomming application/hal+json.
+ * Deserializer to handle incoming application/hal+json.
  */
 public class HALBeanDeserializer extends DelegatingDeserializer {
 
@@ -30,6 +30,7 @@ public class HALBeanDeserializer extends DelegatingDeserializer {
             for (ReservedProperty rp : ReservedProperty.values()) {
                 ObjectNode on = (ObjectNode) tn.get(rp.getPropertyName());
                 if (on != null) {
+                    removeCuries(rp, on);
                     Iterator<Map.Entry<String,JsonNode>> it = on.fields();
                     while (it.hasNext()) {
                         Map.Entry<String,JsonNode> jn = it.next();
@@ -44,6 +45,17 @@ public class HALBeanDeserializer extends DelegatingDeserializer {
         final JsonParser modifiedParser = tn.traverse(p.getCodec());
         modifiedParser.nextToken();
         return _delegatee.deserialize(modifiedParser, ctxt);
+    }
+
+    private void removeCuries(ReservedProperty rp, ObjectNode on) {
+        // Check for curies in the _links object.  If they exist, remove them
+        // as we have nothing in the bean to deserialize into.  Curies only exist
+        // as annotations on the bean!
+        if (rp == ReservedProperty.LINKS) {
+            if (on.has("curies")) {
+                on.remove("curies");
+            }
+        }
     }
 
     @Override
