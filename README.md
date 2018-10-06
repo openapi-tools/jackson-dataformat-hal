@@ -71,6 +71,85 @@ The JSON resulting from the above small POJO model would look like the following
 
 All fields which are not annotated will be handled by the normal Jackson JSON data-binding.
 
+## Including Curies
+
+```java
+@Resource
+@Curie(curie = "curie", href = "http://example.com/doc/{rel}")
+class Model {
+    String modelProperty;
+
+    @Link
+    HALLink self;
+
+    @Link("rel:associated")
+    HALLink relation;
+
+    @Link(value = "curieLink", curie = "curie")
+    HALLink curieLink;
+
+}
+```
+
+```java
+@Resource
+   @Curies({@Curie(href = "http://docs.my.site/{rel}", curie = "curie1"),
+            @Curie(href = "http://docs.other.site/{rel}", curie = "curie2"))
+class Model {
+    String modelProperty;
+
+    @Link
+    HALLink self;
+
+    @Link("rel:associated")
+    HALLink relation;
+
+    @Link(value = "curieLink11", curie = "curie1")
+    HALLink curieLink11;
+
+    @Link(value = "curieLink21", curie = "curie2")
+    HALLink curieLink21;
+
+    @Link(value = "curieLink22", curie = "curie2")
+    HALLink curieLink22;
+
+    @Link(value = "curieLink23", curie = "curie2")
+    HALLink curieLink23;
+
+}
+```
+The resulting JSON would be:
+
+```json
+{
+    "_links": {
+        "curies": [{
+            "name": "curie1",
+            "href": "http://docs.my.site/{rel}",
+            "templated": "true"
+        },{
+            "name": "curie2",
+            "href": "http://docs.other.site/{rel}",
+            "templated": "true"
+        }],
+        "self": { "href": "https://..."},
+        "rel:associated": { "href": "https://..."},
+        "curie1:link11": { "href": "https://...", "templated" :....},
+        "curie2:link21": { "href": "https://...", "templated" :....},
+        "curie2:link22": { "href": "https://...", "templated" :....}
+    },
+    "_embedded": {
+        "associated": {
+            "_links": {
+                "self": { "href": "https://..." }
+            },
+            "associatedProperty": "..."
+        }
+    },
+    "modelProperty": "..."
+}
+```
+
 ## Serializing POJOs as HAL JSON
 
 Serialization is similar to the normal JSON serialization using the `HALMapper` instead of the
