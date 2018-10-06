@@ -14,6 +14,7 @@ public @interface Curies {
 
     /**
      * Annotation grouping a list of {@link Curies} for convenience/readability
+     * @return an array of curies
      */
     Curie[] value() default {};
 

@@ -14,12 +14,14 @@ public @interface Curie {
 
     /**
      * CURIE href template e.g. "http://docs.my.site/{rel}"
+     * @return href a reference to the elaborated documentation for a given resource
      */
     String href() default "";
 
     /**
      * CURIE name used to reference the CURIE in {@link Link} annotations
      * e.g. "mysite"
+     * @return the name of the curie
      */
     String curie() default "";
 
