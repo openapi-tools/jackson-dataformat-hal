@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.BeanPropertyWriter;
 import com.fasterxml.jackson.databind.ser.impl.ObjectIdWriter;
 import com.fasterxml.jackson.databind.ser.std.BeanSerializerBase;
-import com.fasterxml.jackson.databind.util.Annotations;
 import io.openapitools.jackson.dataformat.hal.HALLink;
 import io.openapitools.jackson.dataformat.hal.annotation.Curie;
 import io.openapitools.jackson.dataformat.hal.annotation.Curies;
@@ -14,6 +13,7 @@ import io.openapitools.jackson.dataformat.hal.annotation.EmbeddedResource;
 import io.openapitools.jackson.dataformat.hal.annotation.Link;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -148,9 +148,7 @@ public class HALBeanSerializer extends BeanSerializerBase {
                 curieAnnotations.add(beanDescription.getClassAnnotations().get(Curie.class));
             }
             if (null != beanDescription.getClassAnnotations().get(Curies.class)) {
-                for (Curie curie : beanDescription.getClassAnnotations().get(Curies.class).value()) {
-                    curieAnnotations.add(curie);
-                }
+                curieAnnotations.addAll(Arrays.asList(beanDescription.getClassAnnotations().get(Curies.class).value()));
             }
 
             for (Curie curie : curieAnnotations) {
