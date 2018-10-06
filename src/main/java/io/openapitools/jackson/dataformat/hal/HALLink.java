@@ -152,7 +152,7 @@ public class HALLink {
          */
         public Builder(String href) {
             this.href = href;
-            templated = true;
+            templated = getTemplated(href);
         }
 
         /**
@@ -211,6 +211,15 @@ public class HALLink {
 
         public HALLink build() {
             return new HALLink(this);
+        }
+
+        /**
+         * URI template https://tools.ietf.org/html/rfc6570
+         *  
+         *  very simple implementation of templates
+         */
+        private Boolean getTemplated(String href) {            
+            return href.contains("{");
         }
     }
 }
