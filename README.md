@@ -11,7 +11,7 @@ the normal Jackson JSON handling.
 Module is considered production ready.
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.openapitools.jackson.dataformat/jackson-dataformat-hal/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.openapitools.jackson.dataformat/jackson-dataformat-hal/)
-[![Javadoc](https://javadoc-emblem.rhcloud.com/doc/io.openapitools.jackson.dataformat/jackson-dataformat-hal/badge.svg)](https://www.javadoc.io/doc/io.openapitools.jackson.dataformat/jackson-dataformat-hal)
+[![Javadoc](http://javadoc.io/badge/io.openapitools.jackson.dataformat/jackson-dataformat-hal.svg)](https://www.javadoc.io/doc/io.openapitools.jackson.dataformat/jackson-dataformat-hal)
 [![Build status](https://travis-ci.org/openapi-tools/jackson-dataformat-hal.svg?branch=master)](https://travis-ci.org/openapi-tools/jackson-dataformat-hal)
 [![Coverage Status](https://codecov.io/gh/openapi-tools/jackson-dataformat-hal/coverage.svg?branch=master)](https://codecov.io/gh/openapi-tools/jackson-dataformat-hal)
 
@@ -93,8 +93,10 @@ class Model {
 
 ```java
 @Resource
-   @Curies({@Curie(href = "http://docs.my.site/{rel}", curie = "curie1"),
-            @Curie(href = "http://docs.other.site/{rel}", curie = "curie2"))
+@Curies({
+    @Curie(href = "http://docs.my.site/{rel}", curie = "curie1"),
+    @Curie(href = "http://docs.other.site/{rel}", curie = "curie2")})
+
 class Model {
     String modelProperty;
 
@@ -134,9 +136,9 @@ The resulting JSON would be:
         }],
         "self": { "href": "https://..."},
         "rel:associated": { "href": "https://..."},
-        "curie1:link11": { "href": "https://...", "templated" :....},
-        "curie2:link21": { "href": "https://...", "templated" :....},
-        "curie2:link22": { "href": "https://...", "templated" :....}
+        "curie1:link11": { "href": "https://...", "templated" : "..."},
+        "curie2:link21": { "href": "https://...", "templated" : "..."},
+        "curie2:link22": { "href": "https://...", "templated" : "..."}
     },
     "_embedded": {
         "associated": {
