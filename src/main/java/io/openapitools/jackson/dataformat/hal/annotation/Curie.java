@@ -6,7 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation specifying a CURIE for use with links
+ * Annotation specifying a CURIE for use with links. As defined by W3C in
+ * <a href="https://www.w3.org/TR/2010/NOTE-curie-20101216/">CURIE Syntax 1.0</a>.
  */
 @Target({ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
@@ -23,6 +24,6 @@ public @interface Curie {
      * e.g. "mysite"
      * @return the name of the curie
      */
-    String curie() default "";
+    String prefix() default "";
 
 }

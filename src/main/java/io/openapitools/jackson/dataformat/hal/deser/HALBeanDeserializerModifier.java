@@ -41,7 +41,7 @@ public class HALBeanDeserializerModifier extends BeanDeserializerModifier {
             while (defIt.hasNext()) {
                 BeanPropertyDefinition pbd = defIt.next();                
                 for (ReservedProperty rp : ReservedProperty.values()) {
-                    String alternateName = rp.alternateName(pbd, pbd.getName());
+                    String alternateName = rp.alternateName(beanDesc, pbd, pbd.getName());
                     if (!pbd.getName().equals(alternateName)) {
                         modified.add(pbd.withName(new PropertyName(alternateName)));
                         defIt.remove();                                                                    

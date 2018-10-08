@@ -152,10 +152,10 @@ public class HALBeanSerializer extends BeanSerializerBase {
             }
 
             for (Curie curie : curieAnnotations) {
-                if (curieMap.containsKey(curie.curie())) {
-                    LOG.warn("Curie annotation already exists [{}]", curie.curie());
+                if (curieMap.containsKey(curie.prefix())) {
+                    LOG.warn("Curie annotation already exists [{}]", curie.prefix());
                 }
-                curieMap.put(curie.curie(), curie.href());
+                curieMap.put(curie.prefix(), curie.href());
             }
         }
 

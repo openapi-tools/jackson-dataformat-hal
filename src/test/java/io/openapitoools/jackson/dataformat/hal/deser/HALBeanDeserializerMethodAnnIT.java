@@ -70,11 +70,11 @@ public class HALBeanDeserializerMethodAnnIT {
                 "  \"name\": \"POJO name\"," +
                 "  \"_links\": {" +
                 "    \"curies\": [{" +
-                "      \"href\": \"http://my.example.com/doc/{rel}\"," +
+                "      \"href\": \"http://docs.my.site/{rel}\"," +
                 "      \"name\": \"cur1\"," +
                 "      \"templated\": true" +
                 "    },{" +
-                "      \"href\": \"http://my.otherexample.com/exdoc\"," +
+                "      \"href\": \"http://docs.myother.site/cur2\"," +
                 "      \"name\": \"cur2\"," +
                 "      \"templated\": false" +                
                 "    }]," +
@@ -125,18 +125,78 @@ public class HALBeanDeserializerMethodAnnIT {
         assertEquals("the more you know", resource.fields.get("extras"));        
     }
 
-    
+    @Test
+    public void testCuriesRenamed() throws IOException {
+        final String json = "{" +
+            "  \"name\": \"POJO name\"," +
+            "  \"_links\": {" +
+            "    \"curies\": [{" +
+            "      \"href\": \"http://docs.my.site/{rel}\"," +
+            "      \"name\": \"cur11\"," +
+            "      \"templated\": true" +
+            "    },{" +
+            "      \"href\": \"http://docs.myother.site/cur2\"," +
+            "      \"name\": \"cur22\"," +
+            "      \"templated\": false" +
+            "    }]," +
+            "    \"self\": {" +
+            "      \"href\": \"http://self.url\"," +
+            "      \"templated\": false" +
+            "    }," +
+            "    \"link1\": {" +
+            "      \"href\": \"http://other.link.url\"," +
+            "      \"templated\": false" +
+            "    }," +
+            "    \"cur11:link2\": {" +
+            "      \"href\": \"http://link2.url\"," +
+            "      \"templated\": true" +
+            "    }," +
+            "    \"cur22:link3\": {" +
+            "      \"href\": \"http://link3.url{?id}\"," +
+            "      \"templated\": true" +
+            "    }" +
+            "  }," +
+            "  \"_embedded\": {" +
+            "    \"extras\": \"the more you know\"" +
+            "  }" +
+            "}";
+
+
+        TestCuriesResource resource = om.readValue(json, TestCuriesResource.class);
+        assertEquals("POJO name", resource.fields.get("name"));
+
+        HALLink self = (HALLink) resource.fields.get("self");
+        assertEquals("http://self.url", self.getHref());
+        assertFalse(self.getTemplated());
+
+        HALLink other = (HALLink) resource.fields.get("otherlink");
+        assertEquals("http://other.link.url", other.getHref());
+
+        HALLink curie2 = (HALLink) resource.fields.get("link2");
+        assertEquals("http://link2.url", curie2.getHref());
+        assertEquals(true, curie2.getTemplated());
+
+        HALLink curie3 = (HALLink) resource.fields.get("link3");
+        assertEquals("http://link3.url{?id}", curie3.getHref());
+        assertEquals(true, curie3.getTemplated());
+
+        HALLink curie4 = (HALLink) resource.fields.get("link4");
+        assertNull(curie4);
+
+        assertEquals("the more you know", resource.fields.get("extras"));
+    }
+
      @Test
     public void testUndefinedCurie() throws IOException {
         final String json = "{" +
                 "  \"name\": \"POJO name\"," +
                 "  \"_links\": {" +
                 "    \"curies\": [{" +
-                "      \"href\": \"http://my.example.com/doc/{rel}\"," +
+                "      \"href\": \"http://docs.my.site/{rel}\"," +
                 "      \"name\": \"cur1\"," +
                 "      \"templated\": true" +
                 "    },{" +
-                "      \"href\": \"http://my.otherexample.com/exdoc\"," +
+                "      \"href\": \"http://docs.myother.site/cur2\"," +
                 "      \"name\": \"cur2\"," +
                 "      \"templated\": false" +                
                 "    }]," +
@@ -174,17 +234,18 @@ public class HALBeanDeserializerMethodAnnIT {
             //ignore
         }
     }
+
     @Test
     public void testCurieLinkURI() throws IOException {
         final String json = "{" +
                 "  \"name\": \"POJO name\"," +
                 "  \"_links\": {" +
                 "    \"curies\": [{" +
-                "      \"href\": \"http://my.example.com/doc/{rel}\"," +
+                "      \"href\": \"http://docs.my.site/{rel}\"," +
                 "      \"name\": \"cur1\"," +
                 "      \"templated\": true" +
                 "    },{" +
-                "      \"href\": \"http://my.otherexample.com/exdoc\"," +
+                "      \"href\": \"http://docs.myother.site/cur2\"," +
                 "      \"name\": \"cur2\"," +
                 "      \"templated\": false" +                
                 "    }]," +
@@ -235,8 +296,43 @@ public class HALBeanDeserializerMethodAnnIT {
         assertEquals("the more you know", resource.fields.get("extras"));        
     }
 
+    @Test
+    public void testCurieResolved() throws IOException {
+        final String json = "{" +
+            "  \"name\": \"POJO name\"," +
+            "  \"_links\": {" +
+            "    \"self\": {" +
+            "      \"href\": \"http://self.url\"," +
+            "      \"templated\": false" +
+            "    }," +
+            "    \"link1\": {" +
+            "      \"href\": \"http://other.link.url\"," +
+            "      \"templated\": false" +
+            "    }," +
+            "    \"http://docs.my.site/link2\": {" +
+            "      \"href\": \"http://link2.url\"," +
+            "      \"templated\": true" +
+            "    }," +
+            "    \"http://docs.myother.site/cur2\": {" +
+            "      \"href\": \"http://link3.url{?id}\"," +
+            "      \"templated\": true" +
+            "    }" +
+            "  }," +
+            "  \"_embedded\": {" +
+            "    \"extras\": \"the more you know\"" +
+            "  }" +
+            "}";
 
-    @Curie(curie = "cur1", href = "http://my.example.com/doc/{rel}")
+
+        TestCuriesResource resource = om.readValue(json, TestCuriesResource.class);
+
+        HALLink link2 = (HALLink) resource.fields.get("link2");
+        assertEquals("http://link2.url", link2.getHref());
+        assertEquals(true, link2.getTemplated());
+    }
+
+
+    @Curie(prefix = "cur1", href = "http://my.example.com/doc/{rel}")
     @Resource
     public static class TestSingleCurieResource {
         // Guard against Jackson unintentionally using class fields for deserialization.
@@ -267,10 +363,10 @@ public class HALBeanDeserializerMethodAnnIT {
         }
     }
     
-   @Curies({@Curie(href = "http://docs.my.site/{rel}", curie = "cur1"),
-             @Curie(href = "http://docs.myother.site/cur2", curie = "cur2"),
-             @Curie(href = "http://docs.another.site/{rel}", curie = "cur3"), 
-             @Curie(href = "http://docs.my.unusedsite/{rel}", curie = "cur4-not-used")})
+   @Curies({@Curie(href = "http://docs.my.site/{rel}", prefix = "cur1"),
+             @Curie(href = "http://docs.myother.site/cur2", prefix = "cur2"),
+             @Curie(href = "http://docs.another.site/{rel}", prefix = "cur3"),
+             @Curie(href = "http://docs.my.unusedsite/{rel}", prefix = "cur4-not-used")})
     @Resource
     public static class TestCuriesResource {
         // Guard against Jackson unintentionally using class fields for deserialization.

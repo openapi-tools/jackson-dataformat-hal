@@ -1,5 +1,6 @@
 package io.openapitoools.jackson.dataformat.hal.deser;
 
+import com.fasterxml.jackson.databind.BeanDescription;
 import io.openapitools.jackson.dataformat.hal.deser.ReservedProperty;
 import com.fasterxml.jackson.databind.introspect.AnnotatedField;
 import com.fasterxml.jackson.databind.introspect.AnnotationMap;
@@ -16,26 +17,29 @@ public class ReservedPropertyTest {
 
     @Test
     public void testAlternateNameNone() {
+        BeanDescription bd = mock(BeanDescription.class);
         BeanPropertyDefinition bpd = mock(BeanPropertyDefinition.class);
 
-        String alternateName = ReservedProperty.LINKS.alternateName(bpd, "orig-name");
+        String alternateName = ReservedProperty.LINKS.alternateName(bd, bpd, "orig-name");
 
         assertEquals("orig-name", alternateName);
     }
 
     @Test
     public void testAlternateNameFieldNoAnnotation() throws Exception {
+        BeanDescription bd = mock(BeanDescription.class);
         BeanPropertyDefinition bpd = mock(BeanPropertyDefinition.class);
         AnnotatedField af = new AnnotatedField(null, POJO.class.getDeclaredField("bareField"), null);
         when(bpd.getField()).thenReturn(af);
 
-        String alternateName = ReservedProperty.LINKS.alternateName(bpd, "orig-name");
+        String alternateName = ReservedProperty.LINKS.alternateName(bd, bpd, "orig-name");
 
         assertEquals("orig-name", alternateName);
     }
 
     @Test
     public void testAlternateNameFieldNoValue() throws Exception {
+        BeanDescription bd = mock(BeanDescription.class);
         BeanPropertyDefinition bpd = mock(BeanPropertyDefinition.class);
 
         final Field field = POJO.class.getDeclaredField("annotatedField");
@@ -44,13 +48,14 @@ public class ReservedPropertyTest {
         AnnotatedField af = new AnnotatedField(null, field, am);
         when(bpd.getField()).thenReturn(af);
 
-        String alternateName = ReservedProperty.LINKS.alternateName(bpd, "orig-name");
+        String alternateName = ReservedProperty.LINKS.alternateName(bd, bpd, "orig-name");
 
         assertTrue(alternateName.matches(".+:orig-name"));
     }
 
     @Test
     public void testAlternateNameField() throws Exception {
+        BeanDescription bd = mock(BeanDescription.class);
         BeanPropertyDefinition bpd = mock(BeanPropertyDefinition.class);
 
         final Field field = POJO.class.getDeclaredField("annotatedFieldWithValue");
@@ -59,7 +64,7 @@ public class ReservedPropertyTest {
         AnnotatedField af = new AnnotatedField(null, field, am);
         when(bpd.getField()).thenReturn(af);
 
-        String alternateName = ReservedProperty.LINKS.alternateName(bpd, "orig-name");
+        String alternateName = ReservedProperty.LINKS.alternateName(bd, bpd, "orig-name");
 
         assertTrue(alternateName.matches(".+:alternate-name"));
     }

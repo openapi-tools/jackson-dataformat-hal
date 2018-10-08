@@ -108,10 +108,10 @@ public class HALBeanSerializerMethodAnnIT {
     }
 
     @Resource
-    @Curies({@Curie(href = "http://docs.my.site/{rel}", curie = "cur1"),
-             @Curie(href = "http://docs.myother.site/{rel}", curie = "cur2"),
-             @Curie(href = "http://docs.another.site/{rel}", curie = "cur3"), 
-             @Curie(href = "http://docs.my.site/{rel}", curie = "cur4-not-used")})
+    @Curies({@Curie(href = "http://docs.my.site/{rel}", prefix = "cur1"),
+             @Curie(href = "http://docs.myother.site/{rel}", prefix = "cur2"),
+             @Curie(href = "http://docs.another.site/{rel}", prefix = "cur3"),
+             @Curie(href = "http://docs.my.site/{rel}", prefix = "cur4-not-used")})
     public static class TestResource {
         // Guard against Jackson unintentionally using class fields for serialization.
         private final Map<String, Object> fields = new HashMap<>();
@@ -181,7 +181,7 @@ public class HALBeanSerializerMethodAnnIT {
 
     // test support for @Curie as opposed to @Curies
     @Resource
-    @Curie(href = "http://docs.my.site/{rel}", curie = "cur1")
+    @Curie(href = "http://docs.my.site/{rel}", prefix = "cur1")
     public static class SingleCurieResource {
 
         private final Map<String, Object> fields = new HashMap<>();
