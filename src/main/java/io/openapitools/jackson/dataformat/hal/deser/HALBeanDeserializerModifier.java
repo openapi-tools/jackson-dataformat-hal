@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package io.openapitools.jackson.dataformat.hal.deser;
 
 import com.fasterxml.jackson.databind.BeanDescription;
@@ -12,8 +7,11 @@ import com.fasterxml.jackson.databind.PropertyName;
 import com.fasterxml.jackson.databind.deser.BeanDeserializer;
 import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier;
 import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
+import io.openapitools.jackson.dataformat.hal.annotation.Curie;
+import io.openapitools.jackson.dataformat.hal.annotation.Curies;
 import io.openapitools.jackson.dataformat.hal.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -36,15 +34,16 @@ public class HALBeanDeserializerModifier extends BeanDeserializerModifier {
     public List<BeanPropertyDefinition> updateProperties(DeserializationConfig config, BeanDescription beanDesc, List<BeanPropertyDefinition> propDefs) {
         Resource ann = beanDesc.getClassAnnotations().get(Resource.class);
         if (ann != null) {
+            CurieMap map = createCurieMap(beanDesc);
             List<BeanPropertyDefinition> modified = new ArrayList<>();
-            Iterator<BeanPropertyDefinition> defIt = propDefs.iterator();
-            while (defIt.hasNext()) {
-                BeanPropertyDefinition pbd = defIt.next();                
+            Iterator<BeanPropertyDefinition> properties = propDefs.iterator();
+            while (properties.hasNext()) {
+                BeanPropertyDefinition property = properties.next();
                 for (ReservedProperty rp : ReservedProperty.values()) {
-                    String alternateName = rp.alternateName(beanDesc, pbd, pbd.getName());
-                    if (!pbd.getName().equals(alternateName)) {
-                        modified.add(pbd.withName(new PropertyName(alternateName)));
-                        defIt.remove();                                                                    
+                    String alternateName = rp.alternateName(property, map);
+                    if (!property.getName().equals(alternateName)) {
+                        modified.add(property.withName(new PropertyName(alternateName)));
+                        properties.remove();
                     }
                 }
             }
@@ -52,5 +51,18 @@ public class HALBeanDeserializerModifier extends BeanDeserializerModifier {
         }
         return propDefs;
     }
-      
+
+    private CurieMap createCurieMap(BeanDescription beanDesc) {
+        ArrayList<CurieMap.Mapping> mappings = new ArrayList<>();
+        Curie sc = beanDesc.getClassAnnotations().get(Curie.class);
+        if (sc != null) {
+            mappings.add(new CurieMap.Mapping(sc));
+        }
+        Curies cs = beanDesc.getClassAnnotations().get(Curies.class);
+        if (cs != null) {
+            Arrays.stream(cs.value()).forEach(c -> mappings.add(new CurieMap.Mapping(c)));
+        }
+        return new CurieMap(mappings.toArray(new CurieMap.Mapping[0]));
+    }
+
 }

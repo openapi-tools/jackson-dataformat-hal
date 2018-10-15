@@ -12,9 +12,11 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * Deserializer to handle incoming application/hal+json.
@@ -27,29 +29,25 @@ public class HALBeanDeserializer extends DelegatingDeserializer {
 
     @Override
     public Object deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-        TreeNode tn = p.getCodec().readTree(p);  
+        TreeNode tn = p.getCodec().readTree(p);
         if (tn.isObject()) {
             ObjectNode root = (ObjectNode) tn;
             for (ReservedProperty rp : ReservedProperty.values()) {
                 ObjectNode on = (ObjectNode) tn.get(rp.getPropertyName());
                 if (on != null) {
-                    ArrayList<CurieMapping.Mapping> mappings = new ArrayList<>();
-                    if (ReservedProperty.LINKS.equals(rp) && on.has("curies")) {
-                        ArrayNode curies = (ArrayNode) on.get("curies");
-                        curies.elements().forEachRemaining(node -> mappings.add(createMapping((ObjectNode) node)));
-                        on.remove("curies");
-                    }
-                    CurieMapping curieMapping = new CurieMapping(mappings.toArray(new CurieMapping.Mapping[0]));
+                    CurieMap curieMap = createCurieMap(rp, on);
+                    on.remove("curies");
 
-                    Iterator<Map.Entry<String,JsonNode>> it = on.fields();
+                    Iterator<Map.Entry<String, JsonNode>> it = on.fields();
                     while (it.hasNext()) {
-                        Map.Entry<String,JsonNode> jn = it.next();
-                        String propertyName = curieMapping.resolve(jn.getKey()).map(URI::toString).orElse(jn.getKey());
+                        Map.Entry<String, JsonNode> jn = it.next();
+                        String propertyName = curieMap.resolve(jn.getKey()).map(URI::toString).orElse(jn.getKey());
                         root.set(rp.alternateName(propertyName), jn.getValue());
                     }
-                    root.remove(rp.getPropertyName());                
+
+                    root.remove(rp.getPropertyName());
                 }
-                
+
             }
         }
 
@@ -58,24 +56,25 @@ public class HALBeanDeserializer extends DelegatingDeserializer {
         return _delegatee.deserialize(modifiedParser, ctxt);
     }
 
-    private CurieMapping.Mapping createMapping(ObjectNode node) {
-        return new CurieMapping.Mapping(node.get("name").textValue(), node.get("href").textValue());
+    private CurieMap createCurieMap(ReservedProperty rp, ObjectNode on) {
+        if (ReservedProperty.LINKS.equals(rp) && on.has("curies")) {
+            ArrayNode curies = (ArrayNode) on.get("curies");
+            List<CurieMap.Mapping> mappings = StreamSupport.stream(curies.spliterator(), false)
+                    .map(n -> createMapping((ObjectNode) n))
+                    .collect(Collectors.toList());
+            return new CurieMap(mappings.toArray(new CurieMap.Mapping[0]));
+        } else {
+            return new CurieMap();
+        }
     }
 
-    private void removeCuries(ReservedProperty rp, ObjectNode on) {
-        // Check for curies in the _links object.  If they exist, remove them
-        // as we have nothing in the bean to deserialize into.  Curies only exist
-        // as annotations on the bean!
-        if (rp == ReservedProperty.LINKS) {
-            if (on.has("curies")) {
-                on.remove("curies");
-            }
-        }
+    private CurieMap.Mapping createMapping(ObjectNode node) {
+        return new CurieMap.Mapping(node.get("name").textValue(), node.get("href").textValue());
     }
 
     @Override
     protected JsonDeserializer<?> newDelegatingInstance(JsonDeserializer<?> newDelegatee) {
         return new HALBeanDeserializer((BeanDeserializerBase) newDelegatee);
     }
-    
+
 }

@@ -1,18 +1,13 @@
 package io.openapitools.jackson.dataformat.hal.deser;
 
-import com.fasterxml.jackson.databind.BeanDescription;
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
 import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
-import io.openapitools.jackson.dataformat.hal.annotation.Curie;
-import io.openapitools.jackson.dataformat.hal.annotation.Curies;
 import io.openapitools.jackson.dataformat.hal.annotation.EmbeddedResource;
 import io.openapitools.jackson.dataformat.hal.annotation.Link;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -42,7 +37,9 @@ public enum ReservedProperty {
         return name;
     }
 
-    public String alternateName(BeanDescription beanDescription, BeanPropertyDefinition bpd, String originalName) {
+    public String alternateName(BeanPropertyDefinition bpd, CurieMap map) {
+        String originalName = bpd.getName();
+
         AnnotatedMember annotatedMember = firstNonNull(bpd.getField(), bpd.getSetter(), bpd.getGetter());
         if (annotatedMember == null) {
             return originalName;
@@ -54,7 +51,6 @@ public enum ReservedProperty {
         }
 
         String name;
-
         try {
             String alternateName = (String) valueMethod.invoke(o);
             name = alternateName.isEmpty() ? originalName : alternateName;
@@ -65,21 +61,8 @@ public enum ReservedProperty {
         if (o.annotationType() == Link.class) {
             String curiePrefix = ((Link) o).curie();
             if (!curiePrefix.isEmpty()) {
-                ArrayList<CurieMapping.Mapping> mappings = new ArrayList<>();
-
-                Curie sc = beanDescription.getClassAnnotations().get(Curie.class);
-                if (sc != null) {
-                    mappings.add(new CurieMapping.Mapping(sc));
-                }
-
-                Curies cs = beanDescription.getClassAnnotations().get(Curies.class);
-                if (cs != null) {
-                    Arrays.stream(cs.value()).forEach(c -> mappings.add(new CurieMapping.Mapping(c)));
-                }
-
-                CurieMapping cm = new CurieMapping(mappings.toArray(new CurieMapping.Mapping[0]));
-                Optional<URI> resolved = cm.resolve(curiePrefix + ":" + name);
-                return alternateName(resolved.map(URI::toString).orElse(originalName));
+                Optional<URI> resolved = map.resolve(curiePrefix + ":" + name);
+                return alternateName(resolved.map(URI::toString).orElse(name));
             }
         }
 
