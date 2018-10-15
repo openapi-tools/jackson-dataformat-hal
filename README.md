@@ -152,6 +152,33 @@ The resulting JSON would be:
 }
 ```
 
+The above is equivalent to:
+
+```json
+{
+    "_links": {
+        "self": { "href": "https://..."},
+        "rel:associated": { "href": "https://..."},
+        "http://docs.my.site/link11": { "href": "https://...", "templated" : "..."},
+        "http://docs.other.site/link21": { "href": "https://...", "templated" : "..."},
+        "http://docs.other.site/link22": { "href": "https://...", "templated" : "..."}
+    },
+    "_embedded": {
+        "associated": {
+            "_links": {
+                "self": { "href": "https://..." }
+            },
+            "associatedProperty": "..."
+        }
+    },
+    "modelProperty": "..."
+}
+```
+
+Both will be supported for deserialization. Also if curie prefixes in the incoming document
+is chosen to be different from the prefixes in the POJO annotations deserialization will be
+supported.
+
 ## Serializing POJOs as HAL JSON
 
 Serialization is similar to the normal JSON serialization using the `HALMapper` instead of the
