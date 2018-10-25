@@ -7,7 +7,9 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation specifying a CURIE for use with links. As defined by W3C in
- * <a href="https://www.w3.org/TR/2010/NOTE-curie-20101216/">CURIE Syntax 1.0</a>.
+ * <a href="https://www.w3.org/TR/2010/NOTE-curie-20101216/">CURIE Syntax 1.0</a>. Note that in
+ * the context of HAL the only substitution done to the template URI of a curie is the
+ * <code>{rel}</code> place holder.
  */
 @Target({ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)

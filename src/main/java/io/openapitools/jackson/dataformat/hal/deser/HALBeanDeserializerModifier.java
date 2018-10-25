@@ -17,7 +17,8 @@ import java.util.List;
 
 /**
  * Modify the deserialization of classes annotated with {@link Resource}. Deserialization will handle the reserved
- * properties <code>_links</code> and <code>_embedded</code>.
+ * properties <code>_links</code> and <code>_embedded</code> by assigning a unique property name to each of the
+ * properties that are part of these sections.
  */
 public class HALBeanDeserializerModifier extends BeanDeserializerModifier {
 

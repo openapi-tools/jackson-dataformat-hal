@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation specifying a CURIE for use with links
+ * Annotation specifying an array of curies to be used in defining link relations.
  */
 @Target({ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)

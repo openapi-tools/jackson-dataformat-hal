@@ -19,7 +19,9 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 /**
- * Deserializer to handle incoming application/hal+json.
+ * Deserializer to handle incoming application/hal+json. The de-serializer is responsible for intercepting
+ * the reserved properties (<code>_links</code> and <code>_embedded</code>) and mapping the properties of these
+ * objects in the incoming json to the uniquely assigned properties of the POJO class.
  */
 public class HALBeanDeserializer extends DelegatingDeserializer {
 
@@ -28,7 +30,7 @@ public class HALBeanDeserializer extends DelegatingDeserializer {
     }
 
     @Override
-    public Object deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public Object deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         TreeNode tn = p.getCodec().readTree(p);
         if (tn.isObject()) {
             ObjectNode root = (ObjectNode) tn;

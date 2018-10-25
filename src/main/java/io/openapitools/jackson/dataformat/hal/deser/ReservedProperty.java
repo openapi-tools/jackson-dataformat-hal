@@ -37,6 +37,14 @@ public enum ReservedProperty {
         return name;
     }
 
+    /**
+     * Assign an alternate name to POJO property that is unique outside of the the reserved
+     * object - if it is a link or embedded property.
+     *
+     * @param bpd The property to process.
+     * @param map Curie map applying to properties of <code>_links</code> section.
+     * @return An alternate name if relevant otherwise the original name is maintained.
+     */
     public String alternateName(BeanPropertyDefinition bpd, CurieMap map) {
         String originalName = bpd.getName();
 
@@ -69,6 +77,13 @@ public enum ReservedProperty {
         return alternateName(name);
     }
 
+    /**
+     * Given a property that should belong to this reserved object instance a name is assigned which will
+     * be unique outside of the reserved property.
+     *
+     * @param originalName Property name within this reserved object that should be unique outside.
+     * @return Alternate name for the given original name.
+     */
     public String alternateName(String originalName) {
         return prefix.toString() + ":" + originalName;
     }
