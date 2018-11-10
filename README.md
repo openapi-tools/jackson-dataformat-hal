@@ -11,7 +11,7 @@ the normal Jackson JSON handling.
 Module is considered production ready.
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.openapitools.jackson.dataformat/jackson-dataformat-hal/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.openapitools.jackson.dataformat/jackson-dataformat-hal/)
-[![Javadoc](https://javadoc-emblem.rhcloud.com/doc/io.openapitools.jackson.dataformat/jackson-dataformat-hal/badge.svg)](https://www.javadoc.io/doc/io.openapitools.jackson.dataformat/jackson-dataformat-hal)
+[![Javadoc](http://javadoc.io/badge/io.openapitools.jackson.dataformat/jackson-dataformat-hal.svg)](https://www.javadoc.io/doc/io.openapitools.jackson.dataformat/jackson-dataformat-hal)
 [![Build status](https://travis-ci.org/openapi-tools/jackson-dataformat-hal.svg?branch=master)](https://travis-ci.org/openapi-tools/jackson-dataformat-hal)
 [![Coverage Status](https://codecov.io/gh/openapi-tools/jackson-dataformat-hal/coverage.svg?branch=master)](https://codecov.io/gh/openapi-tools/jackson-dataformat-hal)
 
@@ -70,6 +70,114 @@ The JSON resulting from the above small POJO model would look like the following
 ```
 
 All fields which are not annotated will be handled by the normal Jackson JSON data-binding.
+
+## Including Curies
+
+```java
+@Resource
+@Curie(curie = "curie", href = "http://example.com/doc/{rel}")
+class Model {
+    String modelProperty;
+
+    @Link
+    HALLink self;
+
+    @Link("rel:associated")
+    HALLink relation;
+
+    @Link(value = "curieLink", curie = "curie")
+    HALLink curieLink;
+
+}
+```
+
+```java
+@Resource
+@Curies({
+    @Curie(href = "http://docs.my.site/{rel}", curie = "curie1"),
+    @Curie(href = "http://docs.other.site/{rel}", curie = "curie2")})
+
+class Model {
+    String modelProperty;
+
+    @Link
+    HALLink self;
+
+    @Link("rel:associated")
+    HALLink relation;
+
+    @Link(value = "curieLink11", curie = "curie1")
+    HALLink curieLink11;
+
+    @Link(value = "curieLink21", curie = "curie2")
+    HALLink curieLink21;
+
+    @Link(value = "curieLink22", curie = "curie2")
+    HALLink curieLink22;
+
+    @Link(value = "curieLink23", curie = "curie2")
+    HALLink curieLink23;
+
+}
+```
+The resulting JSON would be:
+
+```json
+{
+    "_links": {
+        "curies": [{
+            "name": "curie1",
+            "href": "http://docs.my.site/{rel}",
+            "templated": "true"
+        },{
+            "name": "curie2",
+            "href": "http://docs.other.site/{rel}",
+            "templated": "true"
+        }],
+        "self": { "href": "https://..."},
+        "rel:associated": { "href": "https://..."},
+        "curie1:link11": { "href": "https://...", "templated" : "..."},
+        "curie2:link21": { "href": "https://...", "templated" : "..."},
+        "curie2:link22": { "href": "https://...", "templated" : "..."}
+    },
+    "_embedded": {
+        "associated": {
+            "_links": {
+                "self": { "href": "https://..." }
+            },
+            "associatedProperty": "..."
+        }
+    },
+    "modelProperty": "..."
+}
+```
+
+The above is equivalent to:
+
+```json
+{
+    "_links": {
+        "self": { "href": "https://..."},
+        "rel:associated": { "href": "https://..."},
+        "http://docs.my.site/link11": { "href": "https://...", "templated" : "..."},
+        "http://docs.other.site/link21": { "href": "https://...", "templated" : "..."},
+        "http://docs.other.site/link22": { "href": "https://...", "templated" : "..."}
+    },
+    "_embedded": {
+        "associated": {
+            "_links": {
+                "self": { "href": "https://..." }
+            },
+            "associatedProperty": "..."
+        }
+    },
+    "modelProperty": "..."
+}
+```
+
+Both will be supported for deserialization. Also if curie prefixes in the incoming document
+is chosen to be different from the prefixes in the POJO annotations deserialization will be
+supported.
 
 ## Serializing POJOs as HAL JSON
 
