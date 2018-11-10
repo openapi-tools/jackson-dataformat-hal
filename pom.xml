@@ -5,7 +5,7 @@
     
     <name>Jackson HAL Dataformat</name>
     <groupId>io.openapitools.jackson.dataformat</groupId>
-    <version>1.0.5-SNAPSHOT</version>
+    <version>1.0.5</version>
     <artifactId>jackson-dataformat-hal</artifactId>
     <packaging>jar</packaging>
 
@@ -32,7 +32,7 @@
         <connection>scm:git:https://github.com/openapi-tools/jackson-dataformat-hal.git</connection>
         <developerConnection>scm:git:https://github.com/openapi-tools/jackson-dataformat-hal.git</developerConnection>
         <url>https://github.com/openapi-tools/jackson-dataformat-hal/tree/master</url>
-      <tag>HEAD</tag>
+      <tag>v1.0.5</tag>
     </scm>
 
     <distributionManagement>
