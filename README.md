@@ -1,7 +1,7 @@
 # Overview
 
-This project contains a [Jackson](http://wiki.fasterxml.com/JacksonHome) extension component to support the
-[HAL JSON](http://tools.ietf.org/html/draft-kelly-json-hal) format both with respect to
+This project contains a [Jackson](https://github.com/FasterXML/jackson) extension component to support the
+[HAL JSON](https://tools.ietf.org/html/draft-kelly-json-hal) format both with respect to
 serializing and deserializing.
 
 The goal is to handle HAL links and embedded objects as POJO properties with a data-binding similar to
