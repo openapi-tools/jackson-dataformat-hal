@@ -101,14 +101,15 @@ public class HALBeanSerializerPolymorphicWithPropertyIT {
 
     SimpleTopResourceEmbedded resource = new SimpleTopResourceEmbedded();
     String json = om.writeValueAsString(resource);
-    assertEquals("{"
-        + "\"_links\":{"
-        + "\"self\":{\"href\":\"/top/1\"}"
-        + "},"
-        + "\"_embedded\":{"
-        + "{\"_links\":{\"self\":{\"href\":\"/top/1/child/1\"}},\"@type\":\"ChildResource\",\"id\":\"1\"},"
-        + "},"
-        + "\"id\":\"1\"}",
+    assertEquals(
+        "{"
+            + "\"_links\":{"
+            + "\"self\":{\"href\":\"/top/1\"}"
+            + "},"
+            + "\"_embedded\":{"
+            + "\"child\":{\"_links\":{\"self\":{\"href\":\"/top/1/child/1\"}},\"@type\":\"ChildResource\",\"id\":\"1\"}"
+            + "},"
+            + "\"id\":\"1\"}",
         json);
   }
 
@@ -160,9 +161,9 @@ public class HALBeanSerializerPolymorphicWithPropertyIT {
             + "\"_links\":{"
             + "\"self\":{\"href\":\"/top/1/child/1\"}"
             + "},"
-            + "\"@type\":\"ChildResource\","
+            + "\"@type\":\"OtherChildResource\","
             + "\"id\":\"1\","
-            + "\"name\";\"Max\"}",
+            + "\"name\":\"Max\"}",
         json);
   }
 
