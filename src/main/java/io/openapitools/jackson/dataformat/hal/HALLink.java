@@ -1,5 +1,6 @@
 package io.openapitools.jackson.dataformat.hal;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.net.URL;
 
@@ -18,7 +19,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * aspect in the link object, here named {@code seen}. Due to the HyperText Cache Pattern it is included in the link. 
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class HALLink {
+public class HALLink implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private String href;
     private Boolean templated;
