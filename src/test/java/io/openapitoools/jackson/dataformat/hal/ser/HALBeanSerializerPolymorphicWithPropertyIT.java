@@ -53,8 +53,8 @@ public class HALBeanSerializerPolymorphicWithPropertyIT {
             + "},"
             + "\"_embedded\":{"
             + "\"child\":["
-            + "{\"_links\":{\"self\":{\"href\":\"/top/1/child/1\"}},\"@type\":\"ChildResource\",\"id\":\"1\"},"
-            + "{\"_links\":{\"self\":{\"href\":\"/top/1/child/2\"}},\"@type\":\"OtherChildResource\",\"id\":\"2\",\"name\":\"Max\"}]"
+            + "{\"@type\":\"ChildResource\",\"_links\":{\"self\":{\"href\":\"/top/1/child/1\"}},\"id\":\"1\"},"
+            + "{\"@type\":\"OtherChildResource\",\"_links\":{\"self\":{\"href\":\"/top/1/child/2\"}},\"id\":\"2\",\"name\":\"Max\"}]"
             + "},"
             + "\"id\":\"1\"}",
         json);
@@ -81,8 +81,8 @@ public class HALBeanSerializerPolymorphicWithPropertyIT {
             + "},"
             + "\"id\":\"1\","
             + "\"children\":["
-            + "{\"_links\":{\"self\":{\"href\":\"/top/1/child/1\"}},\"@type\":\"ChildResource\",\"id\":\"1\"},"
-            + "{\"_links\":{\"self\":{\"href\":\"/top/1/child/2\"}},\"@type\":\"OtherChildResource\",\"id\":\"2\",\"name\":\"Max\"}]"
+            + "{\"@type\":\"ChildResource\",\"_links\":{\"self\":{\"href\":\"/top/1/child/1\"}},\"id\":\"1\"},"
+            + "{\"@type\":\"OtherChildResource\",\"_links\":{\"self\":{\"href\":\"/top/1/child/2\"}},\"id\":\"2\",\"name\":\"Max\"}]"
             + "}",
         json);
   }
@@ -107,7 +107,7 @@ public class HALBeanSerializerPolymorphicWithPropertyIT {
             + "\"self\":{\"href\":\"/top/1\"}"
             + "},"
             + "\"_embedded\":{"
-            + "\"child\":{\"_links\":{\"self\":{\"href\":\"/top/1/child/1\"}},\"@type\":\"ChildResource\",\"id\":\"1\"}"
+            + "\"child\":{\"@type\":\"ChildResource\",\"_links\":{\"self\":{\"href\":\"/top/1/child/1\"}},\"id\":\"1\"}"
             + "},"
             + "\"id\":\"1\"}",
         json);
@@ -133,7 +133,7 @@ public class HALBeanSerializerPolymorphicWithPropertyIT {
             + "},"
             + "\"id\":\"1\","
             + "\"child\":{"
-            + "\"_links\":{\"self\":{\"href\":\"/top/1/child/1\"}},\"@type\":\"ChildResource\",\"id\":\"1\""
+            + "\"@type\":\"ChildResource\",\"_links\":{\"self\":{\"href\":\"/top/1/child/1\"}},\"id\":\"1\""
             + "}}",
         json);
   }
@@ -144,10 +144,10 @@ public class HALBeanSerializerPolymorphicWithPropertyIT {
     String json = om.writeValueAsString(resource);
     assertEquals(
         "{"
+            + "\"@type\":\"ChildResource\","
             + "\"_links\":{"
             + "\"self\":{\"href\":\"/top/1/child/1\"}"
             + "},"
-            + "\"@type\":\"ChildResource\","
             + "\"id\":\"1\"}",
         json);
   }
@@ -158,10 +158,10 @@ public class HALBeanSerializerPolymorphicWithPropertyIT {
     String json = om.writeValueAsString(resource);
     assertEquals(
         "{"
+            + "\"@type\":\"OtherChildResource\","
             + "\"_links\":{"
             + "\"self\":{\"href\":\"/top/1/child/1\"}"
             + "},"
-            + "\"@type\":\"OtherChildResource\","
             + "\"id\":\"1\","
             + "\"name\":\"Max\"}",
         json);

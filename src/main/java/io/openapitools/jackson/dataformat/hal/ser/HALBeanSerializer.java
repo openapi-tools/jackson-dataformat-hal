@@ -1,11 +1,15 @@
 package io.openapitools.jackson.dataformat.hal.ser;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.core.type.WritableTypeId;
 import com.fasterxml.jackson.databind.BeanDescription;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 import com.fasterxml.jackson.databind.ser.BeanPropertyWriter;
 import com.fasterxml.jackson.databind.ser.impl.ObjectIdWriter;
 import com.fasterxml.jackson.databind.ser.std.BeanSerializerBase;
+import com.fasterxml.jackson.databind.util.NameTransformer;
 import io.openapitools.jackson.dataformat.hal.HALLink;
 import io.openapitools.jackson.dataformat.hal.annotation.Curie;
 import io.openapitools.jackson.dataformat.hal.annotation.Curies;
@@ -63,7 +67,23 @@ public class HALBeanSerializer extends BeanSerializerBase {
     @Override
     public void serialize(Object bean, JsonGenerator jgen, SerializerProvider provider) throws IOException {
         FilteredProperties filtered = new FilteredProperties(bean, provider, beanDescription);
+
+        // this serializer acts autonomous and creates the complete object
+        jgen.writeStartObject();
         filtered.serialize(bean, jgen, provider);
+        jgen.writeEndObject();
+    }
+
+    @Override
+    public void serializeWithType(Object bean, JsonGenerator jgen, SerializerProvider provider,
+        TypeSerializer typeSer) throws IOException {
+        FilteredProperties filtered = new FilteredProperties(bean, provider, beanDescription);
+
+        // this serializer lets the TypeSerializer create the outer frame and inserts the rest of the object
+        WritableTypeId typeIdDef = _typeIdDef(typeSer, bean, JsonToken.START_OBJECT);
+        typeSer.writeTypePrefix(jgen, typeIdDef);
+        filtered.serialize(bean, jgen, provider);
+        typeSer.writeTypeSuffix(jgen, typeIdDef);
     }
 
     /**
@@ -160,8 +180,6 @@ public class HALBeanSerializer extends BeanSerializerBase {
         }
 
         public void serialize(Object bean, JsonGenerator jgen, SerializerProvider provider) throws IOException {
-            jgen.writeStartObject();
-
             if (!links.isEmpty()) {
                 jgen.writeFieldName("_links");
                 jgen.writeStartObject();
@@ -177,8 +195,11 @@ public class HALBeanSerializer extends BeanSerializerBase {
                 jgen.writeStartObject();
                 for (String rel : embedded.keySet()) {
                     try {
-                        jgen.writeFieldName(rel);
-                        jgen.writeObject(embedded.get(rel).get(bean));
+                        // use the relation as new name for the original property
+                        BeanPropertyWriter prop = renameBeanProperty(embedded.get(rel), rel);
+
+                        // serialize the field as normal field
+                        prop.serializeAsField(bean, jgen, provider);
                     } catch (Exception e) {
                         wrapAndThrow(provider, e, bean, rel);
                     }
@@ -193,8 +214,6 @@ public class HALBeanSerializer extends BeanSerializerBase {
                     wrapAndThrow(provider, e, bean, prop.getName());
                 }
             }
-
-            jgen.writeEndObject();
         }
 
         private void addEmbeddedProperty(String rel, BeanPropertyWriter property) {
@@ -219,7 +238,21 @@ public class HALBeanSerializer extends BeanSerializerBase {
             return (null == curie) ? rel : curie + ":" + rel;
         }
 
+        private BeanPropertyWriter renameBeanProperty(BeanPropertyWriter prop, String newName) {
+            return prop.rename(new NameTransformer() {
+                @Override
+                public String transform(String name) {
+                    return newName;
+                }
+
+                @Override
+                public String reverse(String transformed) {
+                    return null;
+                }
+            });
+        }
     }
+
 
     /**
      * Representing either a single link (one-to-one relation) or a collection of links.
