@@ -2,6 +2,7 @@ package io.openapitoools.jackson.dataformat.hal.ser;
 
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -28,7 +29,9 @@ public class HALBeanSerializerIT {
                 + "\"child\":[{\"href\":\"/top/1/child/1\"},{\"href\":\"/top/1/child/2\"}],"
                 + "\"empty:list\":[],"
                 + "\"self\":{\"href\":\"/top/1\"},"
-                + "\"templated\":{\"href\":\"/uri/{id}\",\"templated\":true}"
+                + "\"stringLink\":{\"href\":\"http://something.com\",\"templated\":false},"
+                + "\"templated\":{\"href\":\"/uri/{id}\",\"templated\":true},"
+                + "\"uriLink\":{\"href\":\"http://something.else.com\"}"
                 + "},"
                 + "\"_embedded\":{"
                 + "\"child\":["
@@ -49,6 +52,12 @@ public class HALBeanSerializerIT {
 
         @Link("child")
         public HALLink childLink = new HALLink.Builder(URI.create("/should/be/overridden")).build();
+
+        @Link
+        public String stringLink = "http://something.com";
+
+        @Link
+        public URI uriLink = new URI("http://something.else.com");
 
         @Link
         public HALLink templated = new HALLink.Builder("/uri/{id}").build();
@@ -75,6 +84,9 @@ public class HALBeanSerializerIT {
 
         @EmbeddedResource
         public String nullString = null;
+
+        public TopResource() throws URISyntaxException {
+        }
     }
 
     @Resource
