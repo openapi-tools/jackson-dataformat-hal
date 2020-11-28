@@ -49,10 +49,10 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <com.fasterxml.jackson.version>2.10.2</com.fasterxml.jackson.version>
-        <junit.version>4.12</junit.version>
-        <org.mockito.version>2.2.28</org.mockito.version>
-        <org.slf4j.version>1.7.21</org.slf4j.version>
+        <com.fasterxml.jackson.version>2.11.3</com.fasterxml.jackson.version>
+        <junit.version>5.7.0</junit.version>
+        <org.mockito.version>3.6.28</org.mockito.version>
+        <org.slf4j.version>1.7.30</org.slf4j.version>
     </properties>
 
     <dependencies>
@@ -67,9 +67,15 @@
             <version>${org.slf4j.version}</version>
         </dependency>
 
+		<dependency>
+        	<groupId>org.junit.jupiter</groupId>
+        	<artifactId>junit-jupiter-api</artifactId>
+        	<version>${junit.version}</version>
+        	<scope>test</scope>
+    	</dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>

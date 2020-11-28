@@ -1,7 +1,15 @@
 package io.openapitoools.jackson.dataformat.hal.ser;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.openapitools.jackson.dataformat.hal.HALLink;
 import io.openapitools.jackson.dataformat.hal.HALMapper;
 import io.openapitools.jackson.dataformat.hal.annotation.Curie;
@@ -9,16 +17,6 @@ import io.openapitools.jackson.dataformat.hal.annotation.Curies;
 import io.openapitools.jackson.dataformat.hal.annotation.EmbeddedResource;
 import io.openapitools.jackson.dataformat.hal.annotation.Link;
 import io.openapitools.jackson.dataformat.hal.annotation.Resource;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 /**
  * Verify that HAL annotations can be used on methods as well as fields.
@@ -43,37 +41,37 @@ public class HALBeanSerializerMethodAnnIT {
         JsonNode jsonNode = new ObjectMapper().readTree(json);
 
         JsonNode links = jsonNode.path("_links");
-        assertFalse(links.isMissingNode());
-        assertEquals(6, links.size());
+        Assertions.assertFalse(links.isMissingNode());
+        Assertions.assertEquals(6, links.size());
 
         JsonNode curies = links.get("curies");
-        assertFalse(curies.isMissingNode());
-        assertEquals(3, curies.size());
+        Assertions.assertFalse(curies.isMissingNode());
+        Assertions.assertEquals(3, curies.size());
 
         JsonNode relative2UsingCurie = links.get("cur1:relative2");
-        assertFalse(relative2UsingCurie.isMissingNode());
-        assertEquals("http://other.link.url2", relative2UsingCurie.get("href").asText());
-        assertEquals(false, relative2UsingCurie.get("templated").asBoolean());
+        Assertions.assertFalse(relative2UsingCurie.isMissingNode());
+        Assertions.assertEquals("http://other.link.url2", relative2UsingCurie.get("href").asText());
+        Assertions.assertEquals(false, relative2UsingCurie.get("templated").asBoolean());
 
         JsonNode relative3UsingCurie = links.get("cur2:relative3");
-        assertFalse(relative3UsingCurie.isMissingNode());
-        assertEquals("http://other.link.url3{?id}", relative3UsingCurie.get("href").asText());
-        assertEquals(true, relative3UsingCurie.get("templated").asBoolean());
-        
-       
+        Assertions.assertFalse(relative3UsingCurie.isMissingNode());
+        Assertions.assertEquals("http://other.link.url3{?id}", relative3UsingCurie.get("href").asText());
+        Assertions.assertEquals(true, relative3UsingCurie.get("templated").asBoolean());
+
+
         JsonNode relative4UsingCurie = links.get("cur3:relative4");
-        assertFalse(relative4UsingCurie.isMissingNode());
-        assertEquals("/other.link.url4{?id}", relative4UsingCurie.get("href").asText());
-        assertEquals(true, relative4UsingCurie.get("templated").asBoolean());
+        Assertions.assertFalse(relative4UsingCurie.isMissingNode());
+        Assertions.assertEquals("/other.link.url4{?id}", relative4UsingCurie.get("href").asText());
+        Assertions.assertEquals(true, relative4UsingCurie.get("templated").asBoolean());
 
         JsonNode curie4 = curies.get("cur4-not-used");
-        assertNull(curie4);
+        Assertions.assertNull(curie4);
 
         JsonNode embedded = jsonNode.path("_embedded");
-        assertFalse(embedded.isMissingNode());
-        assertEquals(1, embedded.size());
+        Assertions.assertFalse(embedded.isMissingNode());
+        Assertions.assertEquals(1, embedded.size());
 
-        assertEquals("POJO name", jsonNode.get("name").asText());
+        Assertions.assertEquals("POJO name", jsonNode.get("name").asText());
     }
 
     @Test
@@ -90,21 +88,21 @@ public class HALBeanSerializerMethodAnnIT {
         JsonNode jsonNode = new ObjectMapper().readTree(json);
 
         JsonNode links = jsonNode.path("_links");
-        assertFalse(links.isMissingNode());
-        assertEquals(2, links.size());
+        Assertions.assertFalse(links.isMissingNode());
+        Assertions.assertEquals(2, links.size());
 
         JsonNode curies = links.get("curies");
-        assertFalse(curies.isMissingNode());
+        Assertions.assertFalse(curies.isMissingNode());
         // prune empty which means only 1 exixts
-        assertEquals(1, curies.size());
-        
+        Assertions.assertEquals(1, curies.size());
+
         JsonNode curie1 = curies.get(0);
-        assertNotNull(curie1);
-        assertEquals("cur1", curie1.get("name").asText());
-        assertEquals("http://docs.my.site/{rel}", curie1.get("href").asText());
-        
+        Assertions.assertNotNull(curie1);
+        Assertions.assertEquals("cur1", curie1.get("name").asText());
+        Assertions.assertEquals("http://docs.my.site/{rel}", curie1.get("href").asText());
+
         JsonNode relative1UsingCurie = links.get("cur1:relative1");
-        assertFalse(relative1UsingCurie.isMissingNode());
+        Assertions.assertFalse(relative1UsingCurie.isMissingNode());
     }
 
     @Resource
@@ -144,7 +142,7 @@ public class HALBeanSerializerMethodAnnIT {
         public HALLink getRelatedLink3() {
             return (HALLink) fields.get("friend3");
         }
-    
+
         public HALLink getRelatedLink4() {
             return (HALLink) fields.get("friend4");
         }
@@ -158,12 +156,12 @@ public class HALBeanSerializerMethodAnnIT {
         public void setRelatedLink2(HALLink link) {
             fields.put("friend2", link);
         }
- 
+
         @Link(value = "relative3", curie = "cur2")
         public void setRelatedLink3(HALLink link) {
             fields.put("friend3", link);
         }
- 
+
         @Link(value = "relative4", curie = "cur3")
         public void setRelatedLink4(HALLink link) {
             fields.put("friend4", link);

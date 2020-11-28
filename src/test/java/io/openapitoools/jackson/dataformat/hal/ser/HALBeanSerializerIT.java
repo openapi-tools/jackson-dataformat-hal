@@ -6,14 +6,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.openapitools.jackson.dataformat.hal.HALLink;
 import io.openapitools.jackson.dataformat.hal.HALMapper;
 import io.openapitools.jackson.dataformat.hal.annotation.EmbeddedResource;
 import io.openapitools.jackson.dataformat.hal.annotation.Link;
 import io.openapitools.jackson.dataformat.hal.annotation.Resource;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+
 
 public class HALBeanSerializerIT {
 
@@ -23,7 +26,7 @@ public class HALBeanSerializerIT {
     public void testSerialization() throws Exception {
         TopResource res1 = new TopResource();
         String json = om.writeValueAsString(res1);
-        assertEquals("{"
+        Assertions.assertEquals("{"
                 + "\"_links\":{"
                 + "\"child\":[{\"href\":\"/top/1/child/1\"},{\"href\":\"/top/1/child/2\"}],"
                 + "\"empty:list\":[],"

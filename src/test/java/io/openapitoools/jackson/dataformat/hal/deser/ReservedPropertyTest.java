@@ -1,18 +1,20 @@
 package io.openapitoools.jackson.dataformat.hal.deser;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.lang.reflect.Field;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import com.fasterxml.jackson.databind.introspect.AnnotatedField;
 import com.fasterxml.jackson.databind.introspect.AnnotationMap;
 import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
+
 import io.openapitools.jackson.dataformat.hal.annotation.Link;
 import io.openapitools.jackson.dataformat.hal.deser.CurieMap;
 import io.openapitools.jackson.dataformat.hal.deser.ReservedProperty;
-import java.lang.reflect.Field;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class ReservedPropertyTest {
 
@@ -24,7 +26,7 @@ public class ReservedPropertyTest {
 
         String alternateName = ReservedProperty.LINKS.alternateName(bpd,cm );
 
-        assertEquals("orig-name", alternateName);
+        Assertions.assertEquals("orig-name", alternateName);
     }
 
     @Test
@@ -37,7 +39,7 @@ public class ReservedPropertyTest {
 
         String alternateName = ReservedProperty.LINKS.alternateName(bpd, cm);
 
-        assertEquals("orig-name", alternateName);
+        Assertions.assertEquals("orig-name", alternateName);
     }
 
     @Test
@@ -54,7 +56,7 @@ public class ReservedPropertyTest {
 
         String alternateName = ReservedProperty.LINKS.alternateName(bpd, cm);
 
-        assertTrue(alternateName.matches(".+:orig-name"));
+        Assertions.assertTrue(alternateName.matches(".+:orig-name"));
     }
 
     @Test
@@ -71,7 +73,7 @@ public class ReservedPropertyTest {
 
         String alternateName = ReservedProperty.LINKS.alternateName(bpd, cm);
 
-        assertTrue(alternateName.matches(".+:alternate-name"));
+        Assertions.assertTrue(alternateName.matches(".+:alternate-name"));
     }
 
     static class POJO {
