@@ -1,10 +1,14 @@
 package io.openapitoools.jackson.dataformat.hal.ser;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -41,37 +45,37 @@ public class HALBeanSerializerMethodAnnIT {
         JsonNode jsonNode = new ObjectMapper().readTree(json);
 
         JsonNode links = jsonNode.path("_links");
-        Assertions.assertFalse(links.isMissingNode());
-        Assertions.assertEquals(6, links.size());
+        assertFalse(links.isMissingNode());
+        assertEquals(6, links.size());
 
         JsonNode curies = links.get("curies");
-        Assertions.assertFalse(curies.isMissingNode());
-        Assertions.assertEquals(3, curies.size());
+        assertFalse(curies.isMissingNode());
+        assertEquals(3, curies.size());
 
         JsonNode relative2UsingCurie = links.get("cur1:relative2");
-        Assertions.assertFalse(relative2UsingCurie.isMissingNode());
-        Assertions.assertEquals("http://other.link.url2", relative2UsingCurie.get("href").asText());
-        Assertions.assertEquals(false, relative2UsingCurie.get("templated").asBoolean());
+        assertFalse(relative2UsingCurie.isMissingNode());
+        assertEquals("http://other.link.url2", relative2UsingCurie.get("href").asText());
+        assertEquals(false, relative2UsingCurie.get("templated").asBoolean());
 
         JsonNode relative3UsingCurie = links.get("cur2:relative3");
-        Assertions.assertFalse(relative3UsingCurie.isMissingNode());
-        Assertions.assertEquals("http://other.link.url3{?id}", relative3UsingCurie.get("href").asText());
-        Assertions.assertEquals(true, relative3UsingCurie.get("templated").asBoolean());
+        assertFalse(relative3UsingCurie.isMissingNode());
+        assertEquals("http://other.link.url3{?id}", relative3UsingCurie.get("href").asText());
+        assertEquals(true, relative3UsingCurie.get("templated").asBoolean());
 
 
         JsonNode relative4UsingCurie = links.get("cur3:relative4");
-        Assertions.assertFalse(relative4UsingCurie.isMissingNode());
-        Assertions.assertEquals("/other.link.url4{?id}", relative4UsingCurie.get("href").asText());
-        Assertions.assertEquals(true, relative4UsingCurie.get("templated").asBoolean());
+        assertFalse(relative4UsingCurie.isMissingNode());
+        assertEquals("/other.link.url4{?id}", relative4UsingCurie.get("href").asText());
+        assertEquals(true, relative4UsingCurie.get("templated").asBoolean());
 
         JsonNode curie4 = curies.get("cur4-not-used");
-        Assertions.assertNull(curie4);
+        assertNull(curie4);
 
         JsonNode embedded = jsonNode.path("_embedded");
-        Assertions.assertFalse(embedded.isMissingNode());
-        Assertions.assertEquals(1, embedded.size());
+        assertFalse(embedded.isMissingNode());
+        assertEquals(1, embedded.size());
 
-        Assertions.assertEquals("POJO name", jsonNode.get("name").asText());
+        assertEquals("POJO name", jsonNode.get("name").asText());
     }
 
     @Test
@@ -88,21 +92,21 @@ public class HALBeanSerializerMethodAnnIT {
         JsonNode jsonNode = new ObjectMapper().readTree(json);
 
         JsonNode links = jsonNode.path("_links");
-        Assertions.assertFalse(links.isMissingNode());
-        Assertions.assertEquals(2, links.size());
+        assertFalse(links.isMissingNode());
+        assertEquals(2, links.size());
 
         JsonNode curies = links.get("curies");
-        Assertions.assertFalse(curies.isMissingNode());
+        assertFalse(curies.isMissingNode());
         // prune empty which means only 1 exixts
-        Assertions.assertEquals(1, curies.size());
+        assertEquals(1, curies.size());
 
         JsonNode curie1 = curies.get(0);
-        Assertions.assertNotNull(curie1);
-        Assertions.assertEquals("cur1", curie1.get("name").asText());
-        Assertions.assertEquals("http://docs.my.site/{rel}", curie1.get("href").asText());
+        assertNotNull(curie1);
+        assertEquals("cur1", curie1.get("name").asText());
+        assertEquals("http://docs.my.site/{rel}", curie1.get("href").asText());
 
         JsonNode relative1UsingCurie = links.get("cur1:relative1");
-        Assertions.assertFalse(relative1UsingCurie.isMissingNode());
+        assertFalse(relative1UsingCurie.isMissingNode());
     }
 
     @Resource

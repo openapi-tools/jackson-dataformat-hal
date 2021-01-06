@@ -1,11 +1,12 @@
 package io.openapitoools.jackson.dataformat.hal.ser;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -42,7 +43,7 @@ public class HALBeanSerializerPolymorphicWithExistingFieldIT {
 
     TopResource resource = new TopResource();
     String json = om.writeValueAsString(resource);
-    Assertions.assertEquals(
+    assertEquals(
         "{"
             + "\"_links\":{"
             + "\"child\":[{\"href\":\"/top/1/child/1\"},{\"href\":\"/top/1/child/2\"}],"
@@ -71,7 +72,7 @@ public class HALBeanSerializerPolymorphicWithExistingFieldIT {
 
     TopResourceWithoutEmbedded resource = new TopResourceWithoutEmbedded();
     String json = om.writeValueAsString(resource);
-    Assertions.assertEquals(
+    assertEquals(
         "{"
             + "\"_links\":{"
             + "\"self\":{\"href\":\"/top/1\"}"
@@ -98,7 +99,7 @@ public class HALBeanSerializerPolymorphicWithExistingFieldIT {
 
     SimpleTopResourceEmbedded resource = new SimpleTopResourceEmbedded();
     String json = om.writeValueAsString(resource);
-    Assertions.assertEquals(
+    assertEquals(
         "{"
             + "\"_links\":{"
             + "\"self\":{\"href\":\"/top/1\"}"
@@ -122,7 +123,7 @@ public class HALBeanSerializerPolymorphicWithExistingFieldIT {
 
     SimpleTopResource resource = new SimpleTopResource();
     String json = om.writeValueAsString(resource);
-    Assertions.assertEquals(
+    assertEquals(
         "{"
             + "\"_links\":{"
             + "\"self\":{\"href\":\"/top/1\"}"
@@ -138,7 +139,7 @@ public class HALBeanSerializerPolymorphicWithExistingFieldIT {
   public void testSerializationForAnnotatedPolymorphicObject() throws Exception {
     ChildResource resource = new ChildResource("1");
     String json = om.writeValueAsString(resource);
-    Assertions.assertEquals(
+    assertEquals(
         "{"
             + "\"_links\":{"
             + "\"self\":{\"href\":\"/top/1/child/1\"}"
@@ -152,7 +153,7 @@ public class HALBeanSerializerPolymorphicWithExistingFieldIT {
   public void testSerializationForNotAnnotatedPolymorphicObject() throws Exception {
     ChildResource resource = new OtherChildResource("1", "Max");
     String json = om.writeValueAsString(resource);
-    Assertions.assertEquals(
+    assertEquals(
         "{"
             + "\"_links\":{"
             + "\"self\":{\"href\":\"/top/1/child/1\"}"

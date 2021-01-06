@@ -1,11 +1,14 @@
 package io.openapitoools.jackson.dataformat.hal.deser;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,16 +53,16 @@ public class HALBeanDeserializerMethodAnnIT {
                 "}";
 
         TestSingleCurieResource resource = om.readValue(json, TestSingleCurieResource.class);
-        Assertions.assertEquals("POJO name", resource.fields.get("name"));
+        assertEquals("POJO name", resource.fields.get("name"));
 
         HALLink self = (HALLink) resource.fields.get("self");
-        Assertions.assertEquals("http://self.url", self.getHref());
-        Assertions.assertFalse(self.getTemplated());
+        assertEquals("http://self.url", self.getHref());
+        assertFalse(self.getTemplated());
 
         HALLink other = (HALLink) resource.fields.get("otherlink");
-        Assertions.assertEquals("http://other.link.url", other.getHref());
+        assertEquals("http://other.link.url", other.getHref());
 
-        Assertions.assertEquals("the more you know", resource.fields.get("extras"));
+        assertEquals("the more you know", resource.fields.get("extras"));
     }
 
     @Test
@@ -100,27 +103,27 @@ public class HALBeanDeserializerMethodAnnIT {
 
 
         TestCuriesResource resource = om.readValue(json, TestCuriesResource.class);
-        Assertions.assertEquals("POJO name", resource.fields.get("name"));
+        assertEquals("POJO name", resource.fields.get("name"));
 
         HALLink self = (HALLink) resource.fields.get("self");
-        Assertions.assertEquals("http://self.url", self.getHref());
-        Assertions.assertFalse(self.getTemplated());
+        assertEquals("http://self.url", self.getHref());
+        assertFalse(self.getTemplated());
 
         HALLink other = (HALLink) resource.fields.get("otherlink");
-        Assertions.assertEquals("http://other.link.url", other.getHref());
+        assertEquals("http://other.link.url", other.getHref());
 
         HALLink curie2 = (HALLink) resource.fields.get("link2");
-        Assertions.assertEquals("http://link2.url", curie2.getHref());
-        Assertions.assertEquals(true, curie2.getTemplated());
+        assertEquals("http://link2.url", curie2.getHref());
+        assertEquals(true, curie2.getTemplated());
 
         HALLink curie3 = (HALLink) resource.fields.get("link3");
-        Assertions.assertEquals("http://link3.url{?id}", curie3.getHref());
-        Assertions.assertEquals(true, curie3.getTemplated());
+        assertEquals("http://link3.url{?id}", curie3.getHref());
+        assertEquals(true, curie3.getTemplated());
 
         HALLink curie4 = (HALLink) resource.fields.get("link4");
-        Assertions.assertNull(curie4);
+        assertNull(curie4);
 
-        Assertions.assertEquals("the more you know", resource.fields.get("extras"));
+        assertEquals("the more you know", resource.fields.get("extras"));
     }
 
     @Test
@@ -161,27 +164,27 @@ public class HALBeanDeserializerMethodAnnIT {
 
 
         TestCuriesResource resource = om.readValue(json, TestCuriesResource.class);
-        Assertions.assertEquals("POJO name", resource.fields.get("name"));
+        assertEquals("POJO name", resource.fields.get("name"));
 
         HALLink self = (HALLink) resource.fields.get("self");
-        Assertions.assertEquals("http://self.url", self.getHref());
-        Assertions.assertFalse(self.getTemplated());
+        assertEquals("http://self.url", self.getHref());
+        assertFalse(self.getTemplated());
 
         HALLink other = (HALLink) resource.fields.get("otherlink");
-        Assertions.assertEquals("http://other.link.url", other.getHref());
+        assertEquals("http://other.link.url", other.getHref());
 
         HALLink curie2 = (HALLink) resource.fields.get("link2");
-        Assertions.assertEquals("http://link2.url", curie2.getHref());
-        Assertions.assertEquals(true, curie2.getTemplated());
+        assertEquals("http://link2.url", curie2.getHref());
+        assertEquals(true, curie2.getTemplated());
 
         HALLink curie3 = (HALLink) resource.fields.get("link3");
-        Assertions.assertEquals("http://link3.url{?id}", curie3.getHref());
-        Assertions.assertEquals(true, curie3.getTemplated());
+        assertEquals("http://link3.url{?id}", curie3.getHref());
+        assertEquals(true, curie3.getTemplated());
 
         HALLink curie4 = (HALLink) resource.fields.get("link4");
-        Assertions.assertNull(curie4);
+        assertNull(curie4);
 
-        Assertions.assertEquals("the more you know", resource.fields.get("extras"));
+        assertEquals("the more you know", resource.fields.get("extras"));
     }
 
      @Test
@@ -227,7 +230,7 @@ public class HALBeanDeserializerMethodAnnIT {
 
         try {
             om.readValue(json, TestCuriesResource.class);
-            Assertions.fail("There should be a failure due to non-defined query");
+            fail("There should be a failure due to non-defined query");
         } catch (UnrecognizedPropertyException upe) {
             //ignore
         }
@@ -271,27 +274,27 @@ public class HALBeanDeserializerMethodAnnIT {
 
 
         TestCuriesResource resource = om.readValue(json, TestCuriesResource.class);
-        Assertions.assertEquals("POJO name", resource.fields.get("name"));
+        assertEquals("POJO name", resource.fields.get("name"));
 
         HALLink self = (HALLink) resource.fields.get("self");
-        Assertions.assertEquals("http://self.url", self.getHref());
-        Assertions.assertFalse(self.getTemplated());
+        assertEquals("http://self.url", self.getHref());
+        assertFalse(self.getTemplated());
 
         HALLink other = (HALLink) resource.fields.get("otherlink");
-        Assertions.assertEquals("http://other.link.url", other.getHref());
+        assertEquals("http://other.link.url", other.getHref());
 
         HALLink curie2 = (HALLink) resource.fields.get("link2");
-        Assertions.assertEquals("/link2.url", curie2.getHref());
-        Assertions.assertEquals(true, curie2.getTemplated());
+        assertEquals("/link2.url", curie2.getHref());
+        assertEquals(true, curie2.getTemplated());
 
         HALLink curie3 = (HALLink) resource.fields.get("link3");
-        Assertions.assertEquals("http://link3.url{?id}", curie3.getHref());
-        Assertions.assertEquals(true, curie3.getTemplated());
+        assertEquals("http://link3.url{?id}", curie3.getHref());
+        assertEquals(true, curie3.getTemplated());
 
         HALLink curie4 = (HALLink) resource.fields.get("link4");
-        Assertions.assertNull(curie4);
+        assertNull(curie4);
 
-        Assertions.assertEquals("the more you know", resource.fields.get("extras"));
+        assertEquals("the more you know", resource.fields.get("extras"));
     }
 
     @Test
@@ -325,8 +328,8 @@ public class HALBeanDeserializerMethodAnnIT {
         TestCuriesResource resource = om.readValue(json, TestCuriesResource.class);
 
         HALLink link2 = (HALLink) resource.fields.get("link2");
-        Assertions.assertEquals("http://link2.url", link2.getHref());
-        Assertions.assertEquals(true, link2.getTemplated());
+        assertEquals("http://link2.url", link2.getHref());
+        assertEquals(true, link2.getTemplated());
     }
 
 

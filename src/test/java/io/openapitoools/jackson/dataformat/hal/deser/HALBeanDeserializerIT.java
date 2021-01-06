@@ -1,9 +1,11 @@
 package io.openapitoools.jackson.dataformat.hal.deser;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.StringReader;
 import java.util.Collection;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,26 +38,26 @@ public class HALBeanDeserializerIT {
     @Test
     public void testDeserialization() throws Exception {
         TopResource tr = om.readValue(new StringReader(HAL_DOC), TopResource.class);
-        Assertions.assertEquals("1", tr.id);
-        Assertions.assertEquals("/top/1", tr.self.getHref());
-        Assertions.assertEquals("/uri/{id}", tr.templated.getHref());
-        Assertions.assertTrue(tr.templated.getTemplated());
-        Assertions.assertEquals(2, tr.childLinks.size());
-        Assertions.assertEquals(2, tr.children.size());
+        assertEquals("1", tr.id);
+        assertEquals("/top/1", tr.self.getHref());
+        assertEquals("/uri/{id}", tr.templated.getHref());
+        assertTrue(tr.templated.getTemplated());
+        assertEquals(2, tr.childLinks.size());
+        assertEquals(2, tr.children.size());
         System.out.println("tr: " + tr);
     }
 
     @Test
     public void testDetailedDeserialization() throws Exception {
         TopResource tr = om.readValue(new StringReader(HAL_DOC), TopResource.class);
-        Assertions.assertEquals("1", tr.id);
-        Assertions.assertEquals("/top/1", tr.self.getHref());
-        Assertions.assertEquals("/uri/{id}", tr.templated.getHref());
-        Assertions.assertTrue(tr.templated.getTemplated());
-        Assertions.assertEquals("top-title", tr.templated.getTitle());
-        Assertions.assertEquals("2017-08-10Z22:00:00", tr.templated.getSeen());
-        Assertions.assertEquals(2, tr.childLinks.size());
-        Assertions.assertEquals(2, tr.children.size());
+        assertEquals("1", tr.id);
+        assertEquals("/top/1", tr.self.getHref());
+        assertEquals("/uri/{id}", tr.templated.getHref());
+        assertTrue(tr.templated.getTemplated());
+        assertEquals("top-title", tr.templated.getTitle());
+        assertEquals("2017-08-10Z22:00:00", tr.templated.getSeen());
+        assertEquals(2, tr.childLinks.size());
+        assertEquals(2, tr.children.size());
         System.out.println("tr: " + tr);
     }
 

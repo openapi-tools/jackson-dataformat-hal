@@ -1,11 +1,12 @@
 package io.openapitoools.jackson.dataformat.hal.deser;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Field;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.introspect.AnnotatedField;
@@ -26,7 +27,7 @@ public class ReservedPropertyTest {
 
         String alternateName = ReservedProperty.LINKS.alternateName(bpd,cm );
 
-        Assertions.assertEquals("orig-name", alternateName);
+        assertEquals("orig-name", alternateName);
     }
 
     @Test
@@ -39,7 +40,7 @@ public class ReservedPropertyTest {
 
         String alternateName = ReservedProperty.LINKS.alternateName(bpd, cm);
 
-        Assertions.assertEquals("orig-name", alternateName);
+        assertEquals("orig-name", alternateName);
     }
 
     @Test
@@ -56,7 +57,7 @@ public class ReservedPropertyTest {
 
         String alternateName = ReservedProperty.LINKS.alternateName(bpd, cm);
 
-        Assertions.assertTrue(alternateName.matches(".+:orig-name"));
+        assertTrue(alternateName.matches(".+:orig-name"));
     }
 
     @Test
@@ -73,7 +74,7 @@ public class ReservedPropertyTest {
 
         String alternateName = ReservedProperty.LINKS.alternateName(bpd, cm);
 
-        Assertions.assertTrue(alternateName.matches(".+:alternate-name"));
+        assertTrue(alternateName.matches(".+:alternate-name"));
     }
 
     static class POJO {

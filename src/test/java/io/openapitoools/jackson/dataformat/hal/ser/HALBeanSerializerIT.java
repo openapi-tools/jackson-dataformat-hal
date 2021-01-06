@@ -1,12 +1,12 @@
 package io.openapitoools.jackson.dataformat.hal.ser;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,7 +26,7 @@ public class HALBeanSerializerIT {
     public void testSerialization() throws Exception {
         TopResource res1 = new TopResource();
         String json = om.writeValueAsString(res1);
-        Assertions.assertEquals("{"
+        assertEquals("{"
                 + "\"_links\":{"
                 + "\"child\":[{\"href\":\"/top/1/child/1\"},{\"href\":\"/top/1/child/2\"}],"
                 + "\"empty:list\":[],"
