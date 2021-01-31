@@ -1,8 +1,19 @@
 package io.openapitoools.jackson.dataformat.hal.deser;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+
 import io.openapitools.jackson.dataformat.hal.HALLink;
 import io.openapitools.jackson.dataformat.hal.HALMapper;
 import io.openapitools.jackson.dataformat.hal.annotation.Curie;
@@ -10,16 +21,6 @@ import io.openapitools.jackson.dataformat.hal.annotation.Curies;
 import io.openapitools.jackson.dataformat.hal.annotation.EmbeddedResource;
 import io.openapitools.jackson.dataformat.hal.annotation.Link;
 import io.openapitools.jackson.dataformat.hal.annotation.Resource;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 
 /**
  * Verify that HAL annotations can be used on methods as well as fields.
@@ -35,7 +36,7 @@ public class HALBeanDeserializerMethodAnnIT {
                 "    \"curies\": [{" +
                 "      \"href\": \"http://my.example.com/doc/{rel}\"," +
                 "      \"name\": \"cur1\"," +
-                "      \"templated\": true" +             
+                "      \"templated\": true" +
                 "    }]," +
                 "    \"self\": {" +
                 "      \"href\": \"http://self.url\"," +
@@ -61,7 +62,7 @@ public class HALBeanDeserializerMethodAnnIT {
         HALLink other = (HALLink) resource.fields.get("otherlink");
         assertEquals("http://other.link.url", other.getHref());
 
-        assertEquals("the more you know", resource.fields.get("extras"));        
+        assertEquals("the more you know", resource.fields.get("extras"));
     }
 
     @Test
@@ -76,7 +77,7 @@ public class HALBeanDeserializerMethodAnnIT {
                 "    },{" +
                 "      \"href\": \"http://docs.myother.site/cur2\"," +
                 "      \"name\": \"cur2\"," +
-                "      \"templated\": false" +                
+                "      \"templated\": false" +
                 "    }]," +
                 "    \"self\": {" +
                 "      \"href\": \"http://self.url\"," +
@@ -89,7 +90,7 @@ public class HALBeanDeserializerMethodAnnIT {
                 "    \"cur1:link2\": {" +
                 "      \"href\": \"http://link2.url\"," +
                 "      \"templated\": true" +
-                "    }," +            
+                "    }," +
                 "    \"cur2:link3\": {" +
                 "      \"href\": \"http://link3.url{?id}\"," +
                 "      \"templated\": true" +
@@ -114,15 +115,15 @@ public class HALBeanDeserializerMethodAnnIT {
         HALLink curie2 = (HALLink) resource.fields.get("link2");
         assertEquals("http://link2.url", curie2.getHref());
         assertEquals(true, curie2.getTemplated());
-        
+
         HALLink curie3 = (HALLink) resource.fields.get("link3");
         assertEquals("http://link3.url{?id}", curie3.getHref());
         assertEquals(true, curie3.getTemplated());
 
         HALLink curie4 = (HALLink) resource.fields.get("link4");
         assertNull(curie4);
-       
-        assertEquals("the more you know", resource.fields.get("extras"));        
+
+        assertEquals("the more you know", resource.fields.get("extras"));
     }
 
     @Test
@@ -198,7 +199,7 @@ public class HALBeanDeserializerMethodAnnIT {
                 "    },{" +
                 "      \"href\": \"http://docs.myother.site/cur2\"," +
                 "      \"name\": \"cur2\"," +
-                "      \"templated\": false" +                
+                "      \"templated\": false" +
                 "    }]," +
                 "    \"self\": {" +
                 "      \"href\": \"http://self.url\"," +
@@ -211,11 +212,11 @@ public class HALBeanDeserializerMethodAnnIT {
                 "    \"cur1:link2\": {" +
                 "      \"href\": \"http://link2.url\"," +
                 "      \"templated\": true" +
-                "    }," +            
+                "    }," +
                 "    \"cur2:link3\": {" +
                 "      \"href\": \"http://link3.url{?id}\"," +
                 "      \"templated\": true" +
-                "    }," +            
+                "    }," +
                 "    \"cur3:extralink\": {" +
                 "      \"href\": \"http://extralink.url\"," +
                 "      \"templated\": false" +
@@ -228,7 +229,7 @@ public class HALBeanDeserializerMethodAnnIT {
 
 
         try {
-            TestCuriesResource resource = om.readValue(json, TestCuriesResource.class);
+            om.readValue(json, TestCuriesResource.class);
             fail("There should be a failure due to non-defined query");
         } catch (UnrecognizedPropertyException upe) {
             //ignore
@@ -247,7 +248,7 @@ public class HALBeanDeserializerMethodAnnIT {
                 "    },{" +
                 "      \"href\": \"http://docs.myother.site/cur2\"," +
                 "      \"name\": \"cur2\"," +
-                "      \"templated\": false" +                
+                "      \"templated\": false" +
                 "    }]," +
                 "    \"self\": {" +
                 "      \"href\": \"http://self.url\"," +
@@ -260,7 +261,7 @@ public class HALBeanDeserializerMethodAnnIT {
                 "    \"cur1:link2\": {" +
                 "      \"href\": \"/link2.url\"," +
                 "      \"templated\": true" +
-                "    }," +            
+                "    }," +
                 "    \"cur2:link3\": {" +
                 "      \"href\": \"http://link3.url{?id}\"," +
                 "      \"templated\": true" +
@@ -285,15 +286,15 @@ public class HALBeanDeserializerMethodAnnIT {
         HALLink curie2 = (HALLink) resource.fields.get("link2");
         assertEquals("/link2.url", curie2.getHref());
         assertEquals(true, curie2.getTemplated());
-        
+
         HALLink curie3 = (HALLink) resource.fields.get("link3");
         assertEquals("http://link3.url{?id}", curie3.getHref());
         assertEquals(true, curie3.getTemplated());
 
         HALLink curie4 = (HALLink) resource.fields.get("link4");
         assertNull(curie4);
-       
-        assertEquals("the more you know", resource.fields.get("extras"));        
+
+        assertEquals("the more you know", resource.fields.get("extras"));
     }
 
     @Test
@@ -362,7 +363,7 @@ public class HALBeanDeserializerMethodAnnIT {
             fields.put("extras", extras);
         }
     }
-    
+
    @Curies({@Curie(href = "http://docs.my.site/{rel}", prefix = "cur1"),
              @Curie(href = "http://docs.myother.site/cur2", prefix = "cur2"),
              @Curie(href = "http://docs.another.site/{rel}", prefix = "cur3"),

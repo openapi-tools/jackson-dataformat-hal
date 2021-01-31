@@ -1,7 +1,19 @@
 package io.openapitoools.jackson.dataformat.hal.ser;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.junit.jupiter.api.Test;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.openapitools.jackson.dataformat.hal.HALLink;
 import io.openapitools.jackson.dataformat.hal.HALMapper;
 import io.openapitools.jackson.dataformat.hal.annotation.Curie;
@@ -9,16 +21,6 @@ import io.openapitools.jackson.dataformat.hal.annotation.Curies;
 import io.openapitools.jackson.dataformat.hal.annotation.EmbeddedResource;
 import io.openapitools.jackson.dataformat.hal.annotation.Link;
 import io.openapitools.jackson.dataformat.hal.annotation.Resource;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 /**
  * Verify that HAL annotations can be used on methods as well as fields.
@@ -59,8 +61,8 @@ public class HALBeanSerializerMethodAnnIT {
         assertFalse(relative3UsingCurie.isMissingNode());
         assertEquals("http://other.link.url3{?id}", relative3UsingCurie.get("href").asText());
         assertEquals(true, relative3UsingCurie.get("templated").asBoolean());
-        
-       
+
+
         JsonNode relative4UsingCurie = links.get("cur3:relative4");
         assertFalse(relative4UsingCurie.isMissingNode());
         assertEquals("/other.link.url4{?id}", relative4UsingCurie.get("href").asText());
@@ -97,12 +99,12 @@ public class HALBeanSerializerMethodAnnIT {
         assertFalse(curies.isMissingNode());
         // prune empty which means only 1 exixts
         assertEquals(1, curies.size());
-        
+
         JsonNode curie1 = curies.get(0);
         assertNotNull(curie1);
         assertEquals("cur1", curie1.get("name").asText());
         assertEquals("http://docs.my.site/{rel}", curie1.get("href").asText());
-        
+
         JsonNode relative1UsingCurie = links.get("cur1:relative1");
         assertFalse(relative1UsingCurie.isMissingNode());
     }
@@ -144,7 +146,7 @@ public class HALBeanSerializerMethodAnnIT {
         public HALLink getRelatedLink3() {
             return (HALLink) fields.get("friend3");
         }
-    
+
         public HALLink getRelatedLink4() {
             return (HALLink) fields.get("friend4");
         }
@@ -158,12 +160,12 @@ public class HALBeanSerializerMethodAnnIT {
         public void setRelatedLink2(HALLink link) {
             fields.put("friend2", link);
         }
- 
+
         @Link(value = "relative3", curie = "cur2")
         public void setRelatedLink3(HALLink link) {
             fields.put("friend3", link);
         }
- 
+
         @Link(value = "relative4", curie = "cur3")
         public void setRelatedLink4(HALLink link) {
             fields.put("friend4", link);

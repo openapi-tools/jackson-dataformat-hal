@@ -1,17 +1,21 @@
 package io.openapitoools.jackson.dataformat.hal.deser;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.StringReader;
+import java.util.Collection;
+
+import org.junit.jupiter.api.Test;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.openapitools.jackson.dataformat.hal.HALLink;
 import io.openapitools.jackson.dataformat.hal.HALMapper;
 import io.openapitools.jackson.dataformat.hal.annotation.EmbeddedResource;
 import io.openapitools.jackson.dataformat.hal.annotation.Link;
 import io.openapitools.jackson.dataformat.hal.annotation.Resource;
-import java.io.StringReader;
-import java.util.Collection;
-import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class HALBeanDeserializerIT {
     static final String HAL_DOC = "{"
@@ -51,7 +55,7 @@ public class HALBeanDeserializerIT {
         assertEquals("/uri/{id}", tr.templated.getHref());
         assertTrue(tr.templated.getTemplated());
         assertEquals("top-title", tr.templated.getTitle());
-        assertEquals("2017-08-10Z22:00:00", tr.templated.getSeen());        
+        assertEquals("2017-08-10Z22:00:00", tr.templated.getSeen());
         assertEquals(2, tr.childLinks.size());
         assertEquals(2, tr.children.size());
         System.out.println("tr: " + tr);
@@ -95,5 +99,5 @@ public class HALBeanDeserializerIT {
         @Link
         public HALLink self;
     }
-    
+
 }

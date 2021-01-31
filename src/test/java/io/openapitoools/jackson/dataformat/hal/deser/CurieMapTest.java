@@ -1,10 +1,12 @@
 package io.openapitoools.jackson.dataformat.hal.deser;
 
-import io.openapitools.jackson.dataformat.hal.deser.CurieMap;
-import java.net.URI;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import static org.junit.Assert.assertEquals;
+import java.net.URI;
+
+import org.junit.jupiter.api.Test;
+
+import io.openapitools.jackson.dataformat.hal.deser.CurieMap;
 
 public class CurieMapTest {
 
