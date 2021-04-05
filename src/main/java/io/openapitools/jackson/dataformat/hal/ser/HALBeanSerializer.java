@@ -55,12 +55,17 @@ public class HALBeanSerializer extends BeanSerializerBase {
     }
 
     @Override
+    protected BeanSerializerBase withProperties(BeanPropertyWriter[] properties, BeanPropertyWriter[] filteredProperties) {
+        return this;
+    }
+
+    @Override
     protected BeanSerializerBase asArraySerializer() {
         return this;
     }
 
     @Override
-    protected BeanSerializerBase withIgnorals(Set<String> set) {
+    protected BeanSerializerBase withByNameInclusion(Set<String> toIgnore, Set<String> toInclude) {
         return this;
     }
 
