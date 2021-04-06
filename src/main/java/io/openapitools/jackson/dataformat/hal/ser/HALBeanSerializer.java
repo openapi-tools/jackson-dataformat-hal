@@ -16,6 +16,7 @@ import io.openapitools.jackson.dataformat.hal.annotation.Curies;
 import io.openapitools.jackson.dataformat.hal.annotation.EmbeddedResource;
 import io.openapitools.jackson.dataformat.hal.annotation.Link;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -132,6 +133,10 @@ public class HALBeanSerializer extends BeanSerializerBase {
                             addLinks(relation, (Collection<HALLink>) prop.get(bean), curie);
                         } else if (value instanceof HALLink) {
                             addLink(relation, (HALLink) prop.get(bean), curie);
+                        } else if (value instanceof String) {
+                            addLink(relation, new HALLink.Builder((String) value).build(), curie);
+                        } else if (value instanceof URI) {
+                            addLink(relation, new HALLink.Builder((URI) value).build(), curie);
                         }
 
                     } else {
