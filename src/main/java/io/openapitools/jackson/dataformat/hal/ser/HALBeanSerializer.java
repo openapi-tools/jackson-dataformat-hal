@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.core.type.WritableTypeId;
 import com.fasterxml.jackson.databind.BeanDescription;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 import com.fasterxml.jackson.databind.ser.BeanPropertyWriter;
@@ -16,15 +17,8 @@ import io.openapitools.jackson.dataformat.hal.annotation.Curies;
 import io.openapitools.jackson.dataformat.hal.annotation.EmbeddedResource;
 import io.openapitools.jackson.dataformat.hal.annotation.Link;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -110,7 +104,23 @@ public class HALBeanSerializer extends BeanSerializerBase {
 
             populateCurieMap(beanDescription);
 
-            for (BeanPropertyWriter prop : _props) {
+            BeanPropertyWriter[] props;
+
+
+            if (_filteredProps != null && provider.getActiveView() != null) {
+                props = Arrays.stream(_filteredProps).filter(bpw -> {
+
+                    if (bpw == null || bpw.getViews() == null || bpw.getViews().length == 0) {
+                        return provider.getConfig().isEnabled(MapperFeature.DEFAULT_VIEW_INCLUSION);
+                    }
+
+                    return Arrays.stream(bpw.getViews()).anyMatch(clazz -> clazz.isAssignableFrom(provider.getActiveView()));
+                }).toArray(BeanPropertyWriter[] ::new);
+            } else {
+                props = _props;
+            }
+
+            for (BeanPropertyWriter prop : props) {
                 try {
                     if (prop.getAnnotation(EmbeddedResource.class) != null) {
                         Object object = prop.get(bean);
