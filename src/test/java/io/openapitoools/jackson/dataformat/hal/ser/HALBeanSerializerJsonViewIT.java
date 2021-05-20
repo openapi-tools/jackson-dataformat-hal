@@ -1,30 +1,29 @@
 package io.openapitoools.jackson.dataformat.hal.ser;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.net.URI;
+
+import org.junit.jupiter.api.Test;
+
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.openapitools.jackson.dataformat.hal.HALLink;
 import io.openapitools.jackson.dataformat.hal.HALMapper;
 import io.openapitools.jackson.dataformat.hal.annotation.EmbeddedResource;
 import io.openapitools.jackson.dataformat.hal.annotation.Link;
 import io.openapitools.jackson.dataformat.hal.annotation.Resource;
-import org.junit.jupiter.api.Test;
-
-import java.net.URI;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 public class HALBeanSerializerJsonViewIT {
-
-    ObjectMapper om = new HALMapper();
-
     @Test
     public void testSerializationOfView() throws Exception {
         TopResource res1 = new TopResource();
-
-        om.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, false);
-        String json = om.writerWithView(ResourceView1.class).writeValueAsString(res1);
+        String json = new HALMapper()
+                .configure(MapperFeature.DEFAULT_VIEW_INCLUSION, false)
+                .writerWithView(ResourceView1.class)
+                .writeValueAsString(res1);
         assertEquals("{" +
                 "\"_links\":{" +
                 "\"linkWithView1\":{" +
@@ -47,9 +46,10 @@ public class HALBeanSerializerJsonViewIT {
     @Test
     public void testSerializationOfViewWithInclusion() throws Exception {
         TopResource res1 = new TopResource();
-
-        om.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, true);
-        String json = om.writerWithView(ResourceView1.class).writeValueAsString(res1);
+        String json = new HALMapper()
+                .configure(MapperFeature.DEFAULT_VIEW_INCLUSION, true)
+                .writerWithView(ResourceView1.class)
+                .writeValueAsString(res1);
         assertEquals("{\"_links\":{" +
                 "\"linkWithView1\":{" +
                 "\"href\":\"/link/with/view/1\"," +
@@ -83,8 +83,7 @@ public class HALBeanSerializerJsonViewIT {
     @Test
     public void testSerializationOfNoView() throws Exception {
         TopResource res1 = new TopResource();
-
-        String json = om.writeValueAsString(res1);
+        String json = new HALMapper().writeValueAsString(res1);
         assertEquals("{\"_links\":{" +
                 "\"linkWithView1\":{" +
                 "\"href\":\"/link/with/view/1\"," +

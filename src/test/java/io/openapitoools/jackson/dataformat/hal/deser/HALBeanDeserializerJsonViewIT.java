@@ -1,19 +1,21 @@
 package io.openapitoools.jackson.dataformat.hal.deser;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import java.io.IOException;
+import java.io.StringReader;
+
+import org.junit.jupiter.api.Test;
+
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.openapitools.jackson.dataformat.hal.HALLink;
 import io.openapitools.jackson.dataformat.hal.HALMapper;
 import io.openapitools.jackson.dataformat.hal.annotation.EmbeddedResource;
 import io.openapitools.jackson.dataformat.hal.annotation.Link;
 import io.openapitools.jackson.dataformat.hal.annotation.Resource;
-import org.junit.jupiter.api.Test;
-
-import java.io.StringReader;
-import java.net.URI;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 
 public class HALBeanDeserializerJsonViewIT {
@@ -101,12 +103,12 @@ public class HALBeanDeserializerJsonViewIT {
         ",\"stateWithView2\":\"stateWithView2\"" +
         "}";
 
-    ObjectMapper om = new HALMapper();
-
     @Test
-    public void testDeserializationOfView() throws Exception {
-        om.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, false);
-        TopResource tr = om.readerWithView(ResourceView1.class).readValue(new StringReader(HAL_DOC_VIEW), TopResource.class);
+    public void testDeserializationOfView() throws IOException {
+        TopResource tr = new HALMapper()
+                .configure(MapperFeature.DEFAULT_VIEW_INCLUSION, false)
+                .readerWithView(ResourceView1.class)
+                .readValue(new StringReader(HAL_DOC_VIEW), TopResource.class);
 
         assertNull(tr.childWithoutView);
         assertNull(tr.linkWithoutView);
@@ -123,9 +125,11 @@ public class HALBeanDeserializerJsonViewIT {
     }
 
     @Test
-    public void testDeserializationOfViewWithInclusion() throws Exception {
-        om.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, true);
-        TopResource tr = om.readerWithView(ResourceView1.class).readValue(new StringReader(HAL_DOC_INCLUSIVE_VIEW), TopResource.class);
+    public void testDeserializationOfViewWithInclusion() throws IOException {
+        TopResource tr = new HALMapper()
+                .configure(MapperFeature.DEFAULT_VIEW_INCLUSION, true)
+                .readerWithView(ResourceView1.class)
+                .readValue(new StringReader(HAL_DOC_INCLUSIVE_VIEW), TopResource.class);
 
         assertNotNull(tr.childWithoutView);
         assertNotNull(tr.linkWithoutView);
@@ -141,8 +145,8 @@ public class HALBeanDeserializerJsonViewIT {
     }
 
     @Test
-    public void testDeserializationOfNoView() throws Exception {
-        TopResource tr = om.readValue(new StringReader(HAL_DOC_NO_VIEW), TopResource.class);
+    public void testDeserializationOfNoView() throws IOException {
+        TopResource tr = new HALMapper().readValue(new StringReader(HAL_DOC_NO_VIEW), TopResource.class);
 
         assertNotNull(tr.childWithoutView);
         assertNotNull(tr.linkWithoutView);
