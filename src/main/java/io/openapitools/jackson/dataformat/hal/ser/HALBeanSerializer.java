@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.core.type.WritableTypeId;
 import com.fasterxml.jackson.databind.BeanDescription;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
@@ -16,12 +18,19 @@ import io.openapitools.jackson.dataformat.hal.annotation.Curie;
 import io.openapitools.jackson.dataformat.hal.annotation.Curies;
 import io.openapitools.jackson.dataformat.hal.annotation.EmbeddedResource;
 import io.openapitools.jackson.dataformat.hal.annotation.Link;
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  * Serializer to handle {@link io.openapitools.jackson.dataformat.hal.annotation.Resource} beans ensuring they are serialized according to the HAL
@@ -200,7 +209,7 @@ public class HALBeanSerializer extends BeanSerializerBase {
                 jgen.writeStartObject();
                 for (String rel : links.keySet()) {
                     jgen.writeFieldName(rel);
-                    links.get(rel).serialize(jgen);
+                    links.get(rel).serialize(jgen, provider);
                 }
                 jgen.writeEndObject();
             }
@@ -285,22 +294,30 @@ public class HALBeanSerializer extends BeanSerializerBase {
             this.links = links == null ? new HashSet<HALLink>() : links;
         }
 
-        public void serialize(JsonGenerator jgen) throws IOException {
+        public void serialize(JsonGenerator jgen, SerializerProvider provider) throws IOException {
             if (link != null) {
-                writeLinkObject(jgen, link);
+                writeLinkObject(jgen, provider, link);
             } else if (links != null) {
                 jgen.writeStartArray();
                 for (HALLink curLink : links) {
-                    writeLinkObject(jgen, curLink);
+                    writeLinkObject(jgen, provider, curLink);
                 }
                 jgen.writeEndArray();
             }
         }
 
-        private void writeLinkObject(JsonGenerator jgen, HALLink link) throws IOException {
-            jgen.writeObject(link);
+        private void writeLinkObject(JsonGenerator jgen, SerializerProvider provider, HALLink link) throws IOException {
+            _findSerializer(link, provider).serialize(link, jgen, provider);
         }
 
+        protected JsonSerializer<Object> _findSerializer(Object value, SerializerProvider serializers)
+                throws JsonMappingException
+        {
+            // NOTE: will NOT call contextualization
+            return serializers.findValueSerializer(value.getClass());
+        }
     }
+
+
 
 }
