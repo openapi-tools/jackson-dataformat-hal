@@ -187,7 +187,7 @@ Serialization is similar to the normal JSON serialization using the `HALMapper` 
 `ObjectMapper`.
 
 ```java
-ObjectMapper halMapper = new HALMapper();
+ObjectMapper halMapper = HALMapper.create();
 String json = halMapper.writeValueAsString(new POJO());
 ```
 
@@ -196,7 +196,7 @@ String json = halMapper.writeValueAsString(new POJO());
 Deserialization is also similar to the normal JSON handling using the `HALMapper`.
 
 ```java
-ObjectMapper halMapper = new HALMapper();
+ObjectMapper halMapper = HALMapper.create();
 POJO value = halMapper.readValue("{..json..}", POJO.class);
 ```
 
@@ -211,7 +211,7 @@ public class MyApplication extends Application {
     private final Set<Object> singletons = new HashSet<>();
 
     public MyApplication() {
-        singletons.add(new JacksonJsonProvider(new HALMapper()));
+        singletons.add(new JacksonJsonProvider(HALMapper.create()));
     }
 
     @Override
@@ -228,7 +228,7 @@ jackson-jaxrs-providers can be used to register the `HALMapper`.
 
 ```java
 ClientBuilder cb = ClientBuilder.newBuilder();
-Client client = cb.register(new JacksonJsonProvider(new HALMapper())).build();
+Client client = cb.register(new JacksonJsonProvider(HALMapper.create())).build();
 ```
 ## HALLink extended with temporal aspect
 The HALLink is extended with a `seen` property. This is beyond the current specification of HAL.

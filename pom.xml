@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    
-    <name>Jackson HAL Dataformat</name>
-    <groupId>io.openapitools.jackson.dataformat</groupId>
-    <version>1.0.10-SNAPSHOT</version>
-    <artifactId>jackson-dataformat-hal</artifactId>
-    <packaging>jar</packaging>
 
-    <description>Dataformat extension for Jackson to handle the HAL JSON format.</description>
+    <groupId>io.openapitools.jackson.dataformat</groupId>
+    <artifactId>jackson-dataformat-hal-parent</artifactId>
+    <version>1.0.10-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>Jackson HAL Dataformat Parent</name>
+    <description>Parent project for jackson-dataformat-hal modules.</description>
     <url>https://github.com/openapi-tools/jackson-dataformat-hal</url>
 
     <licenses>
         <license>
-          <name>MIT License</name>
-          <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
         </license>
     </licenses>
 
     <developers>
         <developer>
-          <name>Thor Anker Kvisgård Lange</name>
-          <email>thor.lange@gmail.com</email>
-          <organization>Open API Tools</organization>
-          <organizationUrl>https://github.com/openapitools</organizationUrl>
+            <name>Thor Anker Kvisgård Lange</name>
+            <email>thor.lange@gmail.com</email>
+            <organization>Open API Tools</organization>
+            <organizationUrl>https://github.com/openapitools</organizationUrl>
         </developer>
     </developers>
 
@@ -32,7 +33,7 @@
         <connection>scm:git:https://github.com/openapi-tools/jackson-dataformat-hal.git</connection>
         <developerConnection>scm:git:https://github.com/openapi-tools/jackson-dataformat-hal.git</developerConnection>
         <url>https://github.com/openapi-tools/jackson-dataformat-hal/tree/master</url>
-      <tag>HEAD</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>
@@ -49,49 +50,19 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <com.fasterxml.jackson.version>2.13.4</com.fasterxml.jackson.version>
+        <com.fasterxml.jackson.version>2.21.3</com.fasterxml.jackson.version>
+        <com.fasterxml.jackson.annotations.version>2.21</com.fasterxml.jackson.annotations.version>
+        <tools.jackson.version>3.0.3</tools.jackson.version>
         <junit.version>5.7.0</junit.version>
         <org.mockito.version>3.6.28</org.mockito.version>
         <org.slf4j.version>1.7.30</org.slf4j.version>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.fasterxml.jackson.jaxrs</groupId>
-            <artifactId>jackson-jaxrs-json-provider</artifactId>
-            <version>${com.fasterxml.jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${org.slf4j.version}</version>
-        </dependency>
-
-		<dependency>
-        	<groupId>org.junit.jupiter</groupId>
-        	<artifactId>junit-jupiter-api</artifactId>
-        	<version>${junit.version}</version>
-        	<scope>test</scope>
-    	</dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>${org.slf4j.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>${org.mockito.version}</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+    <modules>
+        <module>jackson-dataformat-hal-core</module>
+        <module>jackson-dataformat-hal-v2</module>
+        <module>jackson-dataformat-hal-v3</module>
+    </modules>
 
     <build>
         <plugins>
@@ -110,7 +81,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.6</version>
+                <version>0.8.15</version>
                 <executions>
                     <execution>
                         <id>default-prepare-agent</id>
@@ -198,5 +169,5 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
+
